@@ -20,3 +20,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+//Demo trang chu organi
+Route::get('demo',function(){
+    return view('demo');
+});
