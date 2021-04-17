@@ -1,11 +1,11 @@
 <!-- Footer Section Begin -->
 <footer class="footer spad">
-    <div class="container">
+    <div class="container luixuong">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="footer__about">
                     <div class="footer__about__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                        <a href="{{url('/')}}"><img src="img/logo.png" alt=""></a>
                     </div>
                     <ul>
                         <li>Address: 60-49 Road 11378 New York</li>
@@ -71,3 +71,6 @@
     </div>
 </footer>
 <!-- Footer Section End -->
+<!-- JS include -->
+<script src="{{asset('js/app.js')}}"></script>
+<script src="https://kit.fontawesome.com/1db9e9068d.js" crossorigin="anonymous"></script>

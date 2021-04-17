@@ -6,3 +6,24 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+//My style
+@import 'style';
+@import 'variable';
+@import 'sidebar';
+@import 'shoping-cart';
+@import 'shop-grid';
+@import 'shop-details';
+@import 'responsive';
+@import 'mixins';
+@import 'home-page';
+@import 'hero';
+@import 'header';
+@import 'footer';
+@import 'contact';
+@import 'checkout';
+@import 'breadcrumb';
+@import 'blog';
+@import 'blog-sidebar';
+@import 'blog-details';
+@import 'base';
