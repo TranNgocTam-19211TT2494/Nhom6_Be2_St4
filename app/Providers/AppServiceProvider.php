@@ -25,8 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //Share data category cho header
-        $categorys=ProductCategory::all();
-        View::share('categorys',$categorys);
+        
     }
 }

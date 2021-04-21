@@ -13,8 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/','PageController@index');
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+//Category
+Route::resource('category','CategoryController');
+//Product
+Route::resource('product','ProductController');
+//Admin
+Route::get('admin',function(){
+    return view('backend.index');
+});
