@@ -23,10 +23,18 @@
         width: 90px;
     }
 
+    .blog__details__text img {
+        /* width: 100%; */
+        width: 100%;
+        height: 300px;
+        object-fit: fill;
+    }
+
     .blog__sidebar__recent {
         width: 300px;
     }
-    .blog__sidebar__item a{
+
+    .blog__sidebar__item a {
         text-decoration: none;
         color: black;
     }
@@ -36,7 +44,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4 col-md-5">
-            @include('partial.menu_blog')
+                @include('partial.menu_blog')
                 <!-- <div class="blog__sidebar">
                     <div class="blog__sidebar__search">
                         <form action="#">

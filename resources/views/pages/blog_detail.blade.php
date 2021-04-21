@@ -3,9 +3,13 @@
 
 <style>
     .blog__details__text img {
+        /* width: 100%; */
         width: 100%;
+        height: 300px;
+        object-fit: fill;
     }
-    .blog__sidebar__item a{
+
+    .blog__sidebar__item a {
         text-decoration: none;
         color: black;
     }
@@ -118,10 +122,20 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
+
                             <div class="blog__details__widget">
                                 <ul>
-                                    <li><span>Categories:</span> Food</li>
-                                    <li><span>Tags:</span> All, Trending, Cooking, Healthy Food, Life Style</li>
+                                    @foreach($blog_category as $item)
+
+                                    @if ($blog->id_category == $item->id)
+                                    <li><span>Categories: {{$item->category_name}}</span> </li>
+                                    @endif
+                                    @endforeach
+                                    <li><span>Tags:
+                                            @foreach($blog_category as $item)
+                                            <a style="text-decoration: none; color :black" href="{{asset('blog_caterogy')}}/{{$item->id}}">{{$item->category_name}}/</a>
+                                            @endforeach
+                                        </span></li>
                                 </ul>
                                 <div class="blog__details__social">
                                     <a href="#"><i class="fa fa-facebook"></i></a>

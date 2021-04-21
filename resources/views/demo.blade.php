@@ -147,6 +147,11 @@
 @endsection
 
 @section('blog')
+<style>
+    .icon_search:before {
+        content: "\55";
+    }
+</style>
 <!-- Blog Section Begin -->
 <section class="from-blog spad">
     <div class="container">
@@ -169,8 +174,8 @@
                             <li><i class="fa fa-calendar-o"></i> <?= date_format($item->created_at, "F j, Y, g:i a"); ?></li>
                             <li><i class="fa fa-comment-o"></i> 5</li>
                         </ul>
-                        <h5><a href="#">{{$item->blog_title}}</a></h5>
-                        <p>{{ substr($item->blog_content, 0, 100)}}<?= "..." ?></p>
+                        <h5><a href="{{asset('blog_detail/')}}/{{$item->id}}">{{$item->blog_title}}</a></h5>
+
                     </div>
                 </div>
             </div>

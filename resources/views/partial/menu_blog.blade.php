@@ -1,5 +1,5 @@
 <style>
-   .blog__sidebar__recent__item__pic img {
+    .blog__sidebar__recent__item__pic img {
         width: 90px;
     }
 
@@ -14,17 +14,18 @@
 </style>
 <div class="blog__sidebar">
     <div class="blog__sidebar__search">
-        <form action="#">
-            <input type="text" placeholder="Search...">
-            <button type="submit"><span class="icon_search"></span></button>
+        <form action="timkiem" method="get">
+            <input type="text" name="tukhoa" placeholder="Search...">
+            <button type="submit"><i class="fas fa-search"></i></span></button>
         </form>
     </div>
     <div class="blog__sidebar__item">
+    
         <h4><a href="http://localhost/Nhom6_Be2_St4/public/blog">Categories</a></h4>
         <ul>
-            <li><a href="http://localhost/Nhom6_Be2_St4/public/blog_caterogy/1">Khỏe &amp; Đẹp</a></li>
-            <li><a href="http://localhost/Nhom6_Be2_St4/public/blog_caterogy/2">Nấu Ăn</a></li>
-            <li><a href="http://localhost/Nhom6_Be2_St4/public/blog_caterogy/3">Du Lịch</a></li>
+            @foreach($blog_category as $item)
+            <li><a href="{{asset('blog_caterogy')}}/{{$item->id}}">{{$item->category_name}}</a></li>
+            @endforeach
         </ul>
     </div>
     <div class="blog__sidebar__item">

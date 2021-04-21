@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('product')
+
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
     <div class="container">
@@ -22,6 +23,13 @@
         width: 90px;
     }
 
+    .blog__details__text img {
+        /* width: 100%; */
+        width: 100%;
+        height: 300px;
+        object-fit: fill;
+    }
+
     .blog__sidebar__recent {
         width: 300px;
     }
@@ -36,39 +44,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4 col-md-5">
-                <div class="blog__sidebar">
-                    <div class="blog__sidebar__search">
-                        <form action="#">
-                            <input type="text" placeholder="Search...">
-                            <button type="submit"><span class="icon_search"></span></button>
-                        </form>
-                    </div>
-                    <div class="blog__sidebar__item">
-                        <h4><a href="{{asset('blog')}}">Categories</a></h4>
-                        <ul>
-                            @foreach($blog_category as $item)
-                            <li><a href="{{asset('blog_caterogy')}}/{{$item->id}}">{{$item->category_name}}</a></li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    <div class="blog__sidebar__item">
-                        <h4>Feature</h4>
-                        <div class="blog__sidebar__recent">
-                            @foreach($feature as $item)
-                            <a href="{{asset('blog_detail/')}}/{{$item->id}}" class="blog__sidebar__recent__item">
-                                <div class="blog__sidebar__recent__item__pic">
-                                    <img src="img/blog/{{$item->blog_thumbnail}}" alt="">
-                                </div>
-                                <div class="blog__sidebar__recent__item__text">
-                                    <h6>{{$item->blog_title}}</h6>
-                                    <span>{{$item->created_at}}</span>
-                                </div>
-                            </a>
-                            @endforeach
-                        </div>
-                    </div>
-
-                </div>
+                @include('partial.menu_blog')
             </div>
             <div class="col-lg-8 col-md-7">
                 <div class="row">
