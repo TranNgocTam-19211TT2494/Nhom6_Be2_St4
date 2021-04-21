@@ -1,0 +1,11 @@
+1: 2021_04_21_013904_create_categories_table
+2: 2021_04_21_014812_create_posts_table
+3: 2021_04_21_015039_create_post_tags_table
+4: 2021_04_21_015221_create_post_categories_table
+5: 2021_04_21_015400_create_post_comments_table
+6: 2021_04_21_015532_create_product_reviews_table
+7: 2021_04_21_015706_create_carts_table
+8: 2021_04_21_015820_create_wishlists_table
+9: 2021_04_21_020411_create_coupons_table
+10: 2021_04_21_020501_create_orders_table
+11: 2021_04_21_022825_create_products_table
