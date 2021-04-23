@@ -22,6 +22,8 @@ Route::get('/', 'PageController@index')->name('index');
 Route::resource('category','CategoryController');
 //Product
 Route::resource('product','ProductController');
+//Coupon
+Route::resource('coupon', 'CouponController');
 //Admin
 Route::get('admin',function(){
     return view('backend.index');
