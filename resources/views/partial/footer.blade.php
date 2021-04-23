@@ -81,12 +81,12 @@
 <script src="js/owl.carousel.min.js"></script>
 <script src="js/main.js"></script>
 <script src="https://kit.fontawesome.com/1db9e9068d.js" crossorigin="anonymous"></script>
-<!-- Script này để mở dropdown category ở trang chủ -->
+<!-- Script này để mở dropdown category ở trang chủ, long viết hơi ngu xin thông cảm -->
 <script>
     var x = location.href;
+    let y=x.substr(0,x.length-1)
     var hero = document.getElementById('hero_banner');
-    console.log(x);
-    if (x === "http://localhost/Be2_Project_Nhom6/public/") {
+    if (y === "{{url('/')}}") {
         hero.classList.remove("hero-normal");
     }
 </script>

@@ -148,8 +148,8 @@
                         </div>
                         <ul>
                             <!-- Đổ dữ liệu category nhận từ View:share ra header -->
-                            @foreach ($categorys as $category)
-                            <li><a href="#">{{$category->category_name}}</a></li>
+                            @foreach (DB::table('categories')->get() as $category)
+                            <li><a href="#">{{$category->title}}</a></li>
                             @endforeach
                         </ul>
                     </div>
