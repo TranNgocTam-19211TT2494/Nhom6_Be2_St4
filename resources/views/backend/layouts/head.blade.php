@@ -14,6 +14,7 @@
   
     <!-- Custom styles for this template-->
     <link href="{{asset('backend/css/sb-admin-2.min.css')}}" rel="stylesheet">
+    {{-- Giữ chỗ để sau này push dữ liệu vào đây --}}
     @stack('styles')
   
 </head>
