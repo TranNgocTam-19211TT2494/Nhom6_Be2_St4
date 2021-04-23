@@ -30,6 +30,7 @@
 @include('partial.header')
 @yield('product')
 @yield('blog')
+@yield('content')
 @include('partial.footer')
 
 <body>

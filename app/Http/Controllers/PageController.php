@@ -10,4 +10,8 @@ class PageController extends Controller
     {
         return view('demo');
     }
+    public function contact()
+    {
+        return view('page.contact');
+    }
 }

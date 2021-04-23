@@ -15,16 +15,22 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Auth::routes();
+//Start - PageController
 //Trang index
 Route::get('/', 'PageController@index')->name('index');
+//Trang contact
+Route::get('/contact', 'PageController@contact');
 
+//End - PageController
 //Category
-Route::resource('category','CategoryController');
+Route::resource('category', 'CategoryController');
 //Product
-Route::resource('product','ProductController');
+Route::resource('product', 'ProductController');
 //Coupon
 Route::resource('coupon', 'CouponController');
+//Order
+Route::resource('order', 'OrderController');
 //Admin
-Route::get('admin',function(){
+Route::get('admin', function () {
     return view('backend.index');
 });

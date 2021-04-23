@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
 
 class OrderController extends Controller
 {
@@ -13,7 +14,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Order::orderBy('id', 'DESC')->paginate(10);
+        return view('backend.order.index')->with('orders', $orders);
     }
 
     /**
@@ -46,6 +48,8 @@ class OrderController extends Controller
     public function show($id)
     {
         //
+        $order = Order::findOrFail($id);
+        return view('backend.order.show')->with('order', $order);
     }
 
     /**
@@ -56,7 +60,8 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        //
+        $order = Order::findOrFail($id);
+        return view('backend.order.edit')->with('order', $order);
     }
 
     /**
@@ -80,5 +85,18 @@ class OrderController extends Controller
     public function destroy($id)
     {
         //
+        $order = Order::find($id);
+        if ($order) {
+            $status = $order->delete();
+            if ($status) {
+                request()->session()->flash('success', 'Order Successfully deleted');
+            } else {
+                request()->session()->flash('error', 'Order can not deleted');
+            }
+            return redirect()->route('order.index');
+        } else {
+            request()->session()->flash('error', 'Order not found');
+            return redirect()->back();
+        }
     }
 }
