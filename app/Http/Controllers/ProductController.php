@@ -53,7 +53,9 @@ class ProductController extends Controller
             'status' => 'required|in:active,inactive',
             'condition' => 'required|in:default,new,hot',
             'price' => 'required|numeric',
-            'discount' => 'numeric'
+            'discount' => 'numeric',
+            'manufacturer' => 'string|nullable',
+            
         ]);
         // //Gán dữ liệu
         $data = $request->all();
@@ -128,7 +130,8 @@ class ProductController extends Controller
             'status' => 'required|in:active,inactive',
             'condition' => 'required|in:default,new,hot',
             'price' => 'required|numeric',
-            'discount' => 'numeric'
+            'discount' => 'numeric',
+            'manufacturer' => 'string|nullable',
         ]);
         // //Gán dữ liệu
         $data = $request->all();

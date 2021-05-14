@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ProductReview;
+use App\Models\Product;
 
 class ProductReviewController extends Controller
 {
@@ -14,6 +16,8 @@ class ProductReviewController extends Controller
     public function index()
     {
         //
+        $reviews = ProductReview::all();
+        return view('backend.review.index')->with('reviews', $reviews);
     }
 
     /**
@@ -35,6 +39,24 @@ class ProductReviewController extends Controller
     public function store(Request $request)
     {
         //
+        $this->validate($request, [
+            'rate' => 'required|numeric|min:1'
+        ]);
+        $product_info = Product::getProductBySlug($request->slug);
+        //  return $product_info;
+        // return $request->all();
+        $data = $request->all();
+        $data['product_id'] = $product_info->id;
+        $data['user_id'] = $request->user()->id;
+        $data['status'] = 'active';
+        // dd($data);
+        $status = ProductReview::create($data);
+        if ($status) {
+            request()->session()->flash('success', 'Thank you for your feedback');
+        } else {
+            request()->session()->flash('error', 'Something went wrong! Please try again!!');
+        }
+        return redirect()->back();
     }
 
     /**
@@ -80,5 +102,13 @@ class ProductReviewController extends Controller
     public function destroy($id)
     {
         //
+        $review = ProductReview::find($id);
+        $status = $review->delete();
+        if ($status) {
+            request()->session()->flash('success', 'Successfully deleted review');
+        } else {
+            request()->session()->flash('error', 'Something went wrong! Try again');
+        }
+        return redirect()->route('review.index');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Coupon;
+use App\Models\Cart;
 
 class CouponController extends Controller
 {
@@ -38,7 +39,7 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
-        /*
+        
         $this->validate($request, [
             'code' => 'string|required',
             'type' => 'required|in:fixed,percent',
@@ -53,8 +54,8 @@ class CouponController extends Controller
             request()->session()->flash('error', 'Please try again!!');
         }
         return redirect()->route('coupon.index');
-        */
-        dd($request->all());
+        
+        //dd($request->all());
     }
 
     /**
@@ -132,6 +133,27 @@ class CouponController extends Controller
             return redirect()->route('coupon.index');
         } else {
             request()->session()->flash('error', 'Coupon not found');
+            return redirect()->back();
+        }
+    }
+    public function couponApply(Request $request)
+    {
+        // return $request->all();
+        $coupon = Coupon::where('code', $request->code)->where('status', 'active')->first();
+        // dd($coupon);
+        if (!$coupon) {
+            request()->session()->flash('error', 'Invalid coupon code, Please try again');
+            return back();
+        }
+        if ($coupon) {
+            $total_price = Cart::where('user_id', auth()->user()->id)->where('order_id', null)->sum('price');
+            // dd($total_price);
+            session()->put('coupon', [
+                'id' => $coupon->id,
+                'code' => $coupon->code,
+                'value' => $coupon->discount($total_price)
+            ]);
+            request()->session()->flash('success', 'Coupon successfully applied');
             return redirect()->back();
         }
     }

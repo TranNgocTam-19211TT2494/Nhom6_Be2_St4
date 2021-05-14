@@ -73,6 +73,14 @@
       </div>
 
       <div class="form-group">
+        <label for="weight" class="col-form-label">Manufacturer <span class="text-danger">*</span></label>
+        <input id="manufacturer" type="text" name="manufacturer" min="0" placeholder="Enter manufacturer" value="{{old('manufacturer')}}" class="form-control">
+        @error('manufacturer')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+      </div>
+
+      <div class="form-group">
         <label for="condition">Condition</label>
         <select name="condition" class="form-control">
           <option value="default">Default</option>
@@ -130,9 +138,12 @@
 @endpush
 @push('scripts')
 <script>
+  $('#summary').summernote();
   $('#description').summernote();
   var route_prefix = "{{url('/filemanager')}}";
- $('#lfm').filemanager('image', {prefix: route_prefix});
+  $('#lfm').filemanager('image', {
+    prefix: route_prefix
+  });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 @endpush

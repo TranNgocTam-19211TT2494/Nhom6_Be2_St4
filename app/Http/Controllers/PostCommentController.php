@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PostComment;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostCommentController extends Controller
 {
@@ -13,7 +16,9 @@ class PostCommentController extends Controller
      */
     public function index()
     {
-        //
+
+        $comment = PostComment::orderBy('id', 'DESC')->paginate(10);
+        return view('backend.comment.index')->with('comments', $comment);
     }
 
     /**
@@ -23,7 +28,6 @@ class PostCommentController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -34,7 +38,23 @@ class PostCommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'comment' => 'string|required|max:50',
+        ]);
+        $user_id = null;
+        if (Auth::check()) {
+            $user_id = Auth::user()->id;
+        }
+        $data = $request->all();
+        $data['user_id'] = $user_id;
+        $data['post_id'] = $request->post_id;
+        $status = PostComment::create($data);
+        if ($status) {
+            request()->session()->flash('success', 'Comment successfully added');
+        } else {
+            request()->session()->flash('error', 'Error occurred while adding comment');
+        }
+        return redirect()->back();
     }
 
     /**
@@ -68,7 +88,20 @@ class PostCommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $comment = PostComment::findOrFail($id);
+        echo $comment;
+        echo $request->reply;
+        
+        $data['replied_comment'] = $request->reply;
+
+
+        $status = $comment->fill($data)->save();
+        if ($status) {
+            request()->session()->flash('success', 'Comment successfully updated');
+        } else {
+            request()->session()->flash('error', 'Error occurred while updating comment');
+        }
+        return redirect()->back();
     }
 
     /**
@@ -80,5 +113,18 @@ class PostCommentController extends Controller
     public function destroy($id)
     {
         //
+        $comment = PostComment::findOrFail($id);
+        if ($comment) {
+            $status = $comment->delete();
+            if ($status) {
+                request()->session()->flash('success', 'Comment Successfully deleted');
+            } else {
+                request()->session()->flash('error', 'Comment can not deleted');
+            }
+            return redirect()->back();
+        } else {
+            request()->session()->flash('error', 'Comment not found');
+            return redirect()->back();
+        }
     }
 }

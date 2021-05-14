@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\User;
 use Hash;
-use App\Http\Controllers\MatchOldPassword;
+use Illuminate\Support\Facades\Hash as FacadesHash;
 
 class UserController extends Controller
 {
@@ -111,11 +112,10 @@ class UserController extends Controller
                 'photo' => 'nullable|string',
             ]
         );
-        //dd($request->role);
+        // dd($request->all());
         $data = $request->all();
-        // dd($data['role']);
+        // dd($data);
         $status = $user->fill($data)->save();
-        // dd($user->role);
         // dd($status);
         if ($status) {
             request()->session()->flash('success', 'Successfully updated user');
@@ -142,5 +142,45 @@ class UserController extends Controller
             request()->session()->flash('error', 'There is an error while deleting users');
         }
         return redirect()->route('users.index');
+    }
+    public function profileUpdate(Request $request,$id){
+        // return $request->all();
+        $user=User::findOrFail($id);
+        $data=$request->all();
+        $user->fill($data);
+        $user['name']=$request->name;
+        $user['photo']=$request->photo;
+        $status=$user->save();
+        if($status){
+            request()->session()->flash('success','Successfully updated your profile');
+        }
+        else{
+            request()->session()->flash('error','Please try again!');
+        }
+        return redirect()->back();
+    }
+    public function changPasswordStore(Request $request)
+    {
+        $this->validate($request,
+        [
+            'current_password' => ['required', Hash::check($request->current_password,Auth()->user()->password)],
+            'new_password' => ['required'],
+            'new_confirm_password' => ['same:new_password'],
+        ]);
+   
+        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
+   
+        return redirect()->route('home')->with('success','Password successfully changed');
+    }
+    //Trang profile của user
+    public function userProfile(){
+        $profile=Auth()->user();
+        return view('user.users.profile')->with('profile',$profile);
+    }
+    //Hiển thị toàn bộ order của user
+    public function userOrder($id){
+        $order=Order::find($id);
+        // return $order;
+        return view('user.order.show')->with('order',$order);
     }
 }

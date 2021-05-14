@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    //
-    protected $table = "products";
-    protected $fillable = ['title', 'slug', 'summary', 'description', 'cat_id', 'price', 'discount', 'status', 'photo', 'weight', 'stock', 'is_featured', 'condition'];
+    protected $fillable = ['title', 'slug', 'summary', 'description', 'cat_id', 'price', 'discount', 'status', 'photo', 'weight', 'stock', 'is_featured', 'condition','manufacturer'];
     //Đếm số sản phẩm đang active trong db
     public static function countActiveProduct()
     {
@@ -23,5 +21,13 @@ class Product extends Model
     {
         //Quan hệ N - 1
         return $this->hasOne('App\Models\Category', 'id', 'cat_id');
+    }
+    public static function getProductBySlug($slug)
+    {
+        return Product::with(['cat_info', 'rel_prods', 'getReview'])->where('slug', $slug)->first();
+    }
+    public function rel_prods()
+    {
+        return $this->hasMany('App\Models\Product', 'cat_id', 'cat_id')->where('status', 'active')->orderBy('id', 'DESC')->limit(8);
     }
 }

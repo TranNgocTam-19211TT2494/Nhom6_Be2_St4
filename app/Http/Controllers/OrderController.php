@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Cart;
+use Str;
 
 class OrderController extends Controller
 {
@@ -37,6 +39,59 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request->all());
+        $this->validate($request, [
+            'first_name' => 'string|required',
+            'last_name' => 'string|required',
+            'address' => 'string|required',
+            'coupon' => 'nullable|numeric',
+            'phone' => 'numeric|required',
+            'email' => 'string|required',
+            'total' => 'integer|required',
+            'sub_total' => 'integer|required',
+        ]);
+        // return $request->all();
+
+        if (empty(Cart::where('user_id', auth()->user()->id)->where('order_id', null)->first())) {
+            request()->session()->flash('error', 'Cart is Empty !');
+            return back();
+        }
+        $order = new Order();
+        $order_data = $request->all();
+        $order_data['order_number'] = 'ORD-' . strtoupper(Str::random(10));
+        $order_data['user_id'] = $request->user()->id;
+
+        $order_data['sub_total'] = $request->sub_total;
+        $order_data['quantity'] = $request->quantity;
+        $order_data['coupon'] = $request->coupon;
+        $order_data['total_amount'] = $request->total;
+        $order_data['address']=$request->address;
+
+        // return $order_data['total_amount'];
+        $order_data['status'] = "new";
+        if (request('payment_method') == 'paypal') {
+            $order_data['payment_method'] = 'paypal';
+            $order_data['payment_status'] = 'paid';
+        } else {
+            $order_data['payment_method'] = 'cod';
+            $order_data['payment_status'] = 'Unpaid';
+        }
+        $order->fill($order_data);
+        $order->save();
+        // dd($order);
+        // if (request('payment_method') == 'paypal') {
+        //     return redirect()->route('payment')->with(['id' => $order->id]);
+        // } else {
+        //     session()->forget('cart');
+        //     session()->forget('coupon');
+        // }
+        // dd($order->id);
+        Cart::where('user_id', auth()->user()->id)->where('order_id', null)->update(['order_id' => $order->id]);
+
+        // dd($users);   
+
+        request()->session()->flash('success', 'Your product successfully placed in order');
+        return redirect()->route('home');
     }
 
     /**

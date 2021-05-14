@@ -136,4 +136,9 @@ class CategoryController extends Controller
         }
         return redirect()->route('category.index');
     }
+    public function getProductByCat($Cat_id)
+    {
+        $category=Category::findOrFail($Cat_id);
+        
+    }
 }

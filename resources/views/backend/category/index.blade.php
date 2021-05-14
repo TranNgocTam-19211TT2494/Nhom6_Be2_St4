@@ -62,7 +62,7 @@
               <form method="POST" action="{{route('category.destroy',[$category->id])}}">
                 @csrf
                 @method('delete')
-                <button class="btn btn-danger btn-sm dltBtn" data-id={{$category->id}} style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn btn-danger btn-sm nutXoaDayNe" data-id={{$category->id}} style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fas fa-trash-alt"></i></button>
               </form>
             </td>
           </tr>
@@ -112,20 +112,21 @@
   }
 </script>
 <script>
+  //Script tạo popup hiện lên khi bấm nút xóa
   $(document).ready(function() {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-    $('.dltBtn').click(function(e) {
+    $('.nutXoaDayNe').click(function(e) {
       var form = $(this).closest('form');
       var dataID = $(this).data('id');
       // alert(dataID);
       e.preventDefault();
       swal({
-          title: "Are you sure?",
-          text: "Once deleted, you will not be able to recover this data!",
+          title: "Xác nhận!",
+          text: "Category đã xóa thì không lấy lại được!",
           icon: "warning",
           buttons: true,
           dangerMode: true,
@@ -134,7 +135,7 @@
           if (willDelete) {
             form.submit();
           } else {
-            swal("Your data is safe!");
+            swal("Ồ may quá, chưa xóa!!!");
           }
         });
     })

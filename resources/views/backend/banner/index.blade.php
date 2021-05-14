@@ -37,7 +37,7 @@
               </tr>
           </tfoot>
           <tbody>
-            @foreach($banners as $banner)   
+            @foreach($banners as $banner)  
                 <tr>
                     <td>{{$banner->id}}</td>
                     <td>{{$banner->title}}</td>

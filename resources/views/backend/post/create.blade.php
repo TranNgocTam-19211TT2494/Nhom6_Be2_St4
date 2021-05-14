@@ -15,6 +15,14 @@
         @enderror
       </div>
 
+      <!-- <div class="form-group">
+          <label for="quote" class="col-form-label">Quote</label>
+          <textarea class="form-control" id="quote" name="quote">{{old('quote')}}</textarea>
+          @error('quote')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div> -->
+
       <div class="form-group">
         <label for="description" class="col-form-label">Description</label>
         <textarea class="form-control" id="description" name="description">{{old('description')}}</textarea>

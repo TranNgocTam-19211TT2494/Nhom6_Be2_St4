@@ -12,6 +12,8 @@ use Hash;
 use App\Models\Cart;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Models\ProductReview;
+use App\Models\Banner;
 
 
 class PageController extends Controller
@@ -19,19 +21,27 @@ class PageController extends Controller
     //
     public function index()
     {
+        $posts = Post::orderBy('id', 'DESC')->get()->take(3);
+        $latestProducts = Product::orderBy('id', 'DESC')->get()->take(6);
+        $hotProducts = Product::where('condition', 'hot')->orderBy('id', 'DESC')->get()->take(6);
         $cate1 = Category::with('products')->where('id', 1)->first();
         $cate2 = Category::with('products')->where('id', 2)->first();
         $cate3 = Category::with('products')->where('id', 3)->first();
         $cate4 = Category::with('products')->where('id', 4)->first();
-        return view('demo')->with('cate1', $cate1)
+
+        //banner
+        $banner = Banner::where('status', 'active')->first();
+        //banner inactive
+        $bannerinactive = Banner::where('status', 'inactive')->take(2)->get();
+        return view('trangchu')->with('cate1', $cate1)
             ->with('cate2', $cate2)
             ->with('cate3', $cate3)
-            ->with('cate4', $cate4);
-    }
-    //Trang admin
-    public function admin()
-    {
-        return view('backend.index');
+            ->with('cate4', $cate4)
+            ->with('latest', $latestProducts)
+            ->with('hot', $hotProducts)
+            ->with('posts', $posts)
+            ->with('mainBanner', $banner)
+            ->with('subBanner' , $bannerinactive);
     }
     //Trang login của user
     public function userLogin()
@@ -45,7 +55,7 @@ class PageController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'status' => 'active'])) {
             Session::put('user', $data['email']);
             request()->session()->flash('success', 'Successfully login');
-            return redirect()->route('home');
+            return redirect()->route('index');
         } else {
             request()->session()->flash('error', 'Invalid email and password pleas try again!');
             return redirect()->back();
@@ -70,7 +80,7 @@ class PageController extends Controller
         Session::put('user', $data['email']);
         if ($check) {
             request()->session()->flash('success', 'Successfully registered');
-            return redirect()->route('home');
+            return redirect()->route('index');
         } else {
             request()->session()->flash('error', 'Please try again!');
             return back();
@@ -160,11 +170,19 @@ class PageController extends Controller
         return view('page.product-list', ['products' => $products, 'categories' => $categories]);
     }
     //Chi tiết sản phẩm
+    //Chi tiết sản phẩm
     public static function getProductBySlug($slug)
     {
+
         $products = Product::with('cat_info')->where('slug', $slug)->first();
+        //Review : 
+
+        $product_reviews = ProductReview::getAllReview();
+
+
+
         $categories = Category::all();
-        return view('page.product-detail', ['products' => $products, 'categories' => $categories]);
+        return view('page.product-detail', ['products' => $products, 'product_reviews' => $product_reviews, 'categories' => $categories]);
     }
     //Tìm kiếm category:
     public function productSearch(Request $request)
@@ -177,5 +195,15 @@ class PageController extends Controller
         $categories = Category::where('title', 'like', "%$tukhoa%")
             ->orWhere('summary', 'like', "%$tukhoa%")->take(30)->paginate(4)->appends(['tukhoa' => $tukhoa]);
         return view('page.product-list', ['products' => $products, 'categories' => $categories]);
+    }
+    //Trang user profile
+    public function adminProfile(){
+        $profile=Auth()->user();
+        return view('backend.users.profile')->with('profile',$profile);
+    }
+    //Trang đổi password
+    public function changePassword(){
+        $profile=Auth()->user();
+        return view('backend.layouts.changePassword')->with('profile',$profile);
     }
 }
