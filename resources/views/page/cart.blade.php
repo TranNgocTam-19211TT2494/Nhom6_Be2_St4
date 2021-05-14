@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 @section('content')
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
@@ -35,72 +35,54 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="shoping__cart__item">
-                                    <img src="img/cart/cart-1.jpg" alt="">
-                                    <h5>Vegetable’s Package</h5>
-                                </td>
-                                <td class="shoping__cart__price">
-                                    $55.00
-                                </td>
-                                <td class="shoping__cart__quantity">
-                                    <div class="quantity">
-                                        <div class="pro-qty">
-                                            <input type="text" value="1">
+                            <form action="{{route('cart.update')}}" method="POST">
+                                @csrf
+                                <!-- Start cart items -->
+                                @isset($cart)
+                                @if ($cart->isNotEmpty())
+                                @foreach ($cart as $item)
+                                <tr>
+                                    <td class="shoping__cart__item">
+                                        <img src="@php
+                $image=explode(',',$item->product['photo']);
+                echo $image[0];
+                @endphp" alt="{{$item->title}}" width="100px" height="100px">
+                                        <h5>{{$item->product['title']}}</h5>
+                                    </td>
+                                    <td class="shoping__cart__price">
+                                        {{number_format($item->price)}}
+                                    </td>
+                                    <td class="shoping__cart__quantity">
+                                        <div class="quantity">
+                                            <div class="pro-qty">
+                                                <input type="text" name="quantity[]" value="{{$item->quantity}}">
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="shoping__cart__total">
-                                    $110.00
-                                </td>
-                                <td class="shoping__cart__item__close">
-                                    <span class="icon_close"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="shoping__cart__item">
-                                    <img src="img/cart/cart-2.jpg" alt="">
-                                    <h5>Fresh Garden Vegetable</h5>
-                                </td>
-                                <td class="shoping__cart__price">
-                                    $39.00
-                                </td>
-                                <td class="shoping__cart__quantity">
-                                    <div class="quantity">
-                                        <div class="pro-qty">
-                                            <input type="text" value="1">
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="shoping__cart__total">
-                                    $39.99
-                                </td>
-                                <td class="shoping__cart__item__close">
-                                    <span class="icon_close"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="shoping__cart__item">
-                                    <img src="img/cart/cart-3.jpg" alt="">
-                                    <h5>Organic Bananas</h5>
-                                </td>
-                                <td class="shoping__cart__price">
-                                    $69.00
-                                </td>
-                                <td class="shoping__cart__quantity">
-                                    <div class="quantity">
-                                        <div class="pro-qty">
-                                            <input type="text" value="1">
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="shoping__cart__total">
-                                    $69.99
-                                </td>
-                                <td class="shoping__cart__item__close">
-                                    <span class="icon_close"></span>
-                                </td>
-                            </tr>
+                                        <input type="hidden" name="cartId[]" value="{{$item->id}}">
+                                    </td>
+
+                                    <td class="shoping__cart__total">
+                                        {{number_format($item->amount)}}
+                                    </td>
+                                    <td class="shoping__cart__item__close">
+                                        <a href="{{route('cart.delete',$item->id)}}"><span class="icon_close"></span></a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                @else
+                                <tr>
+                                    <td class="shoping__cart__item text-center">
+                                        There are no any carts available. <a href="" style="color:blue;">Continue shopping</a>
+
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                @endif
+                                @endisset
+
+                                <!-- End cart items -->
                         </tbody>
                     </table>
                 </div>
@@ -109,17 +91,19 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="shoping__cart__btns">
-                    <a href="#" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
-                    <a href="#" class="primary-btn cart-btn cart-btn-right"><span class="icon_loading"></span>
-                        Upadate Cart</a>
+                    <a href="{{route('index')}}" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                    <button type="submit" class="primary-btn cart-btn cart-btn-right" style="border:none;"><span class="icon_loading"></span>
+                        Upadate Cart</button>
                 </div>
+                </form>
             </div>
             <div class="col-lg-6">
                 <div class="shoping__continue">
                     <div class="shoping__discount">
                         <h5>Discount Codes</h5>
-                        <form action="#">
-                            <input type="text" placeholder="Enter your coupon code">
+                        <form action="{{route('coupon.apply')}}" method="post">
+                            @csrf
+                            <input type="text" name="code" placeholder="Enter your coupon code">
                             <button type="submit" class="site-btn">APPLY COUPON</button>
                         </form>
                     </div>
@@ -129,10 +113,18 @@
                 <div class="shoping__checkout">
                     <h5>Cart Total</h5>
                     <ul>
-                        <li>Subtotal <span>$454.98</span></li>
-                        <li>Total <span>$454.98</span></li>
+                        <li>Subtotal <span>@isset($cart)
+                                {{number_format($cart->sum('amount'))}}
+                                @endisset</span></li>
+                        @if(session()->has('coupon'))
+                        <li>Coupon <span>{{number_format(Session::get('coupon')['value'])}}</span></li>
+                        <li>Total <span>{{number_format(($cart->sum('amount'))-(Session::get('coupon')['value']))}}</span></li>
+                        @else
+                        <li>Total <span>{{number_format($cart->sum('amount'))}}</span></li>
+                        @endif
+
                     </ul>
-                    <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
+                    <a href="{{route('checkout')}}" class="primary-btn">PROCEED TO CHECKOUT</a>
                 </div>
             </div>
         </div>

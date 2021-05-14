@@ -5,7 +5,7 @@
 <div class="card">
     <h5 class="card-header">Add Post Category</h5>
     <div class="card-body">
-      <form method="post" action="{{route('post-tag.store')}}">
+      <form method="post" action="{{route('postTag.store')}}">
         {{csrf_field()}}
         <div class="form-group">
           <label for="inputTitle" class="col-form-label">Title</label>

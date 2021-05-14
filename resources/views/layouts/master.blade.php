@@ -15,13 +15,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
     <!-- Css Styles -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="css/nice-select.css" type="text/css">
-    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="{{url('/css/bootstrap.min.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url('/css/elegant-icons.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url('/css/nice-select.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url('/css/jquery-ui.min.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url('/css/owl.carousel.min.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url('/css/slicknav.min.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url('/css/style.css')}}" type="text/css">
+    @stack('styles')
 </head>
 <!-- Page Preloder -->
 <div id="preloder">

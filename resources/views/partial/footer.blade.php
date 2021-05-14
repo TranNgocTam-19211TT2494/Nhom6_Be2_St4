@@ -72,14 +72,14 @@
 </footer>
 <!-- Footer Section End -->
 <!-- Include js -->
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.nice-select.min.js"></script>
-<script src="js/jquery-ui.min.js"></script>
-<script src="js/jquery.slicknav.js"></script>
-<script src="js/mixitup.min.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/main.js"></script>
+<script src="{{asset('/js/jquery-3.3.1.min.js')}}"></script>
+<script src="{{asset('/js/bootstrap.min.js')}}"></script>
+<script src="{{asset('/js/jquery.nice-select.min.js')}}"></script>
+<script src="{{asset('/js/jquery-ui.min.js')}}"></script>
+<script src="{{asset('/js/jquery.slicknav.js')}}"></script>
+<script src="{{asset('/js/mixitup.min.js')}}"></script>
+<script src="{{asset('/js/owl.carousel.min.js')}}"></script>
+<script src="{{asset('/js/main.js')}}"></script>
 <script src="https://kit.fontawesome.com/1db9e9068d.js" crossorigin="anonymous"></script>
 <!-- Script này để mở dropdown category ở trang chủ, long viết hơi ngu xin thông cảm -->
 <script>
@@ -90,3 +90,4 @@
         hero.classList.remove("hero-normal");
     }
 </script>
+@stack('scripts')
