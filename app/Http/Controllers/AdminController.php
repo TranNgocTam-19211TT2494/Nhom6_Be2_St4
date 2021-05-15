@@ -8,6 +8,9 @@ use App\User;
 class AdminController extends Controller
 {
     //
+    public function index(){
+        return view('backend.index');  
+    }
     //User profile
     public function profile()
     {

@@ -103,7 +103,7 @@ class PostCategoryController extends Controller
         else{
             request()->session()->flash('error','Please try again!!');
         }
-        return redirect()->route('postcategory.index');
+        return redirect()->route('blogcategory.index');
     }
 
     /**
@@ -124,6 +124,6 @@ class PostCategoryController extends Controller
         else{
             request()->session()->flash('error','Error while deleting post category');
         }
-        return redirect()->route('postcategory.index');
+        return redirect()->route('blogcategory.index');
     }
 }

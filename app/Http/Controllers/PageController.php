@@ -176,11 +176,7 @@ class PageController extends Controller
 
         $products = Product::with('cat_info')->where('slug', $slug)->first();
         //Review : 
-
         $product_reviews = ProductReview::getAllReview();
-
-
-
         $categories = Category::all();
         return view('page.product-detail', ['products' => $products, 'product_reviews' => $product_reviews, 'categories' => $categories]);
     }
