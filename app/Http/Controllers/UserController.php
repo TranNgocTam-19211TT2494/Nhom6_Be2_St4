@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\ActivationService;
 use App\Models\Order;
+use App\Models\UserActivation;
 use Illuminate\Http\Request;
 use App\User;
-use Hash;
-use Illuminate\Support\Facades\Hash as FacadesHash;
+use Illuminate\Support\Facades\Hash;
+use App\Rules\MatchOldPassword;
 
 class UserController extends Controller
 {
@@ -159,18 +161,18 @@ class UserController extends Controller
         }
         return redirect()->back();
     }
+    //Doi pass user
     public function changPasswordStore(Request $request)
     {
-        $this->validate($request,
-        [
-            'current_password' => ['required', Hash::check($request->current_password,Auth()->user()->password)],
+        $request->validate([
+            'current_password' => ['required', new MatchOldPassword],
             'new_password' => ['required'],
             'new_confirm_password' => ['same:new_password'],
         ]);
-   
-        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
-   
-        return redirect()->route('home')->with('success','Password successfully changed');
+
+        User::find(auth()->user()->id)->update(['password' => Hash::make($request->new_password)]);
+        request()->session()->flash('success', 'Password successfully changed');
+        return redirect()->route('user.profile');
     }
     //Trang profile của user
     public function userProfile(){
@@ -182,5 +184,47 @@ class UserController extends Controller
         $order=Order::find($id);
         // return $order;
         return view('user.order.show')->with('order',$order);
+    }
+    //Active user
+    public function activeUser($token)
+    {
+        $userActivation = new UserActivation;
+        $active= new ActivationService($userActivation);
+        $active->activateUser($token);
+        return redirect()->route('index');
+    }
+    //User order index
+    public function orderIndex()
+    {
+        $orders = Order::orderBy('id', 'DESC')->where('user_id', auth()->user()->id)->paginate(10);
+        return view('user.order.index')->with('orders', $orders);
+    }
+    //User order delete
+    public function userOrderDelete($id)
+    {
+        $order = Order::find($id);
+        if ($order) {
+            if ($order->status == "process" || $order->status == 'delivered' || $order->status == 'cancel') {
+                return redirect()->back()->with('error', 'You can not delete this order now');
+            } else {
+                $status = $order->delete();
+                if ($status) {
+                    request()->session()->flash('success', 'Order Successfully deleted');
+                } else {
+                    request()->session()->flash('error', 'Order can not deleted');
+                }
+                return redirect()->route('user.order.index');
+            }
+        } else {
+            request()->session()->flash('error', 'Order can not found');
+            return redirect()->back();
+        }
+    }
+    //User order show detail
+    public function orderShow($id)
+    {
+        $order = Order::find($id);
+        // return $order;
+        return view('user.order.show')->with('order', $order);
     }
 }

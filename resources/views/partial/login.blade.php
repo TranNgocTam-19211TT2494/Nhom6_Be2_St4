@@ -40,7 +40,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>Your Email<span>*</span></label>
-                                        <input type="email" name="email" placeholder="Input your email" required="required" value="{{old('email')}}">
+                                        <input type="email" name="email" placeholder="Input your email" required="required" value="{{old('email')}}">                        
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -49,6 +49,9 @@
                                         <input type="password" name="password" placeholder="Input" required="required" value="{{old('password')}}">
                                     </div>
                                 </div>
+                                @isset($message)
+                                <span class="text-danger">{{$message->content}}</span>
+                                @endisset
                                 @if (session('error'))
                                 <span class="text-danger">{{session('error')}}</span>
                                 @endif
@@ -57,10 +60,10 @@
                                         <button class="btn site-btn" type="submit">Login</button>
                                         <button class="btn site-btn" formaction="">Register</button>
                                         OR @if (Route::has('password.request'))
-                                        <a class="lost" href="">
-                                            Lost your password?
-                                        </a>
-                                        @endif
+                                            <a class="lost" href="">
+                                                Lost your password?
+                                            </a>
+                                            @endif
 
 
                                     </div>

@@ -13,7 +13,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-      <a class="nav-link" href="">
+      <a class="nav-link" href="{{route('user.profile')}}">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Dashboard</span></a>
     </li>
@@ -27,7 +27,7 @@
         </div>
     <!--Orders -->
     <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="{{route('user.order.index')}}">
             <i class="fas fa-hammer fa-chart-area"></i>
             <span>Orders</span>
         </a>

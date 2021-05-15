@@ -208,4 +208,9 @@ class PageController extends Controller
         $profile=Auth()->user();
         return view('backend.layouts.changePassword')->with('profile',$profile);
     }
+    //Trang đổi password cua user
+    public function changeUserPassword(){
+        $profile=Auth()->user();
+        return view('user.layouts.userPasswordChange')->with('profile',$profile);
+    }
 }

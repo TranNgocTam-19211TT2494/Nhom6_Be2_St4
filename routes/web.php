@@ -50,7 +50,7 @@ Route::get('product/category/{id}', 'PageController@getCategogyProductById')->na
 //End - PageController
 
 //Export pdf order detail
-Route::get('order/pdf/{id}','OrderController@pdfGenerate')->name('order.pdf');
+Route::get('order/pdf/{id}', 'OrderController@pdfGenerate')->name('order.pdf');
 
 //File manager
 Route::group(['prefix' => 'filemanager', 'middleware' => ['web',]], function () {
@@ -107,6 +107,15 @@ Route::group(['prefix' => '/user',], function () {
     Route::post('/register', 'PageController@userRegisterSubmit')->name('user.register.submit');
     //User Logout
     Route::get('/logout', 'PageController@userLogout')->name('user.logout');
+    //User change password
+    Route::get('/changepassword', 'PageController@changeUserPassword')->name('user.change.password');
+    Route::post('/changepassword/save', 'UserController@changPasswordStore')->name('user.changepass.save');
+    //Xac thuc user
+    Route::get('/activation/{token}', 'UserController@activeUser')->name('user.activate');
+    //  Order
+    Route::get('/order', "UserController@orderIndex")->name('user.order.index');
+    Route::get('/order/show/{id}', "UserController@orderShow")->name('user.order.show');
+    Route::delete('/order/delete/{id}', 'UserController@userOrderDelete')->name('user.order.delete');
 });
 
 // End user secsion
