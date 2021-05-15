@@ -26,6 +26,7 @@ class CreateProductsTable extends Migration
             $table->enum('status',['active','inactive'])->default('inactive');
             $table->integer('price');
             $table->integer('discount')->nullabale();
+            $table->string('manufacturer')->nullable();
             $table->boolean('is_featured')->deault(false);
             $table->unsignedBigInteger('cat_id')->nullable();
             $table->foreign('cat_id')->references('id')->on('categories')->onDelete('SET NULL');

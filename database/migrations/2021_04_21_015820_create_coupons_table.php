@@ -17,7 +17,7 @@ class CreateCouponsTable extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->enum('type',['fixed','percent'])->default('fixed');
-            $table->decimal('value',20,2);
+            $table->integer('value');
             $table->enum('status',['active','inactive'])->default('inactive');
             $table->timestamps();
         });

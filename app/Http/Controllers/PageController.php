@@ -7,13 +7,15 @@ use App\Models\Category;
 use App\Models\Product;
 use App\User;
 use Auth;
-use Session;
 use Hash;
 use App\Models\Cart;
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\ProductReview;
 use App\Models\Banner;
+use App\Models\UserActivation;
+use App\Classes\ActivationService;
+use Illuminate\Support\Facades\Session;
 
 
 class PageController extends Controller
@@ -67,6 +69,7 @@ class PageController extends Controller
         return view('partial.register');
     }
     //Xu ly du lieu register
+    //Xu ly du lieu register
     public function userRegisterSubmit(Request $request)
     {
         $this->validate($request, [
@@ -80,6 +83,9 @@ class PageController extends Controller
         Session::put('user', $data['email']);
         if ($check) {
             request()->session()->flash('success', 'Successfully registered');
+            $userActivation = new UserActivation;
+            $activation = new ActivationService($userActivation);
+            $activation->sendActivationMail($check);
             return redirect()->route('index');
         } else {
             request()->session()->flash('error', 'Please try again!');

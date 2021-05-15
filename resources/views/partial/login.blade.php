@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>Contact Us</h2>
+                    <h2>Login</h2>
                     <div class="breadcrumb__option">
                         <a href="{{url('/')}}">Home</a>
                         <span>User login</span>
@@ -41,29 +41,26 @@
                                     <div class="form-group">
                                         <label>Your Email<span>*</span></label>
                                         <input type="email" name="email" placeholder="Input your email" required="required" value="{{old('email')}}">
-                                        @error('email')
-                                        <span class="text-danger">{{$message}}</span>
-                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>Your Password<span>*</span></label>
                                         <input type="password" name="password" placeholder="Input" required="required" value="{{old('password')}}">
-                                        @error('password')
-                                        <span class="text-danger">{{$message}}</span>
-                                        @enderror
                                     </div>
                                 </div>
+                                @if (session('error'))
+                                <span class="text-danger">{{session('error')}}</span>
+                                @endif
                                 <div class="col-12">
                                     <div class="form-group">
                                         <button class="btn site-btn" type="submit">Login</button>
                                         <button class="btn site-btn" formaction="">Register</button>
                                         OR @if (Route::has('password.request'))
-                                            <a class="lost" href="">
-                                                Lost your password?
-                                            </a>
-                                            @endif
+                                        <a class="lost" href="">
+                                            Lost your password?
+                                        </a>
+                                        @endif
 
 
                                     </div>

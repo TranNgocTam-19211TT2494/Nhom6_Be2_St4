@@ -17,9 +17,9 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->string('order_number')->unique();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->float('sub_total');
-            $table->float('coupon')->nullable();
-            $table->float('total_amount');
+            $table->integer('sub_total');
+            $table->integer('coupon')->nullable();
+            $table->integer('total_amount');
             $table->integer('quantity');
             $table->enum('payment_method',['cod','paypal'])->default('cod');
             $table->enum('payment_status',['paid','unpaid'])->default('unpaid');
@@ -30,8 +30,7 @@ class CreateOrdersTable extends Migration
             $table->string('email');
             $table->string('phone');
             $table->string('country');
-            $table->text('address1');
-            $table->text('address2')->nullable();
+            $table->text('address');
             $table->timestamps();
         });
     }
