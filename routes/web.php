@@ -49,6 +49,8 @@ Route::get('product/{id}', 'PageController@getCategogyBySlug');
 Route::get('product/category/{id}', 'PageController@getCategogyProductById')->name('product.category');
 //End - PageController
 
+//Export pdf order detail
+Route::get('order/pdf/{id}','OrderController@pdfGenerate')->name('order.pdf');
 
 //File manager
 Route::group(['prefix' => 'filemanager', 'middleware' => ['web',]], function () {

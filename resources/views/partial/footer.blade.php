@@ -84,10 +84,15 @@
 <!-- Script này để mở dropdown category ở trang chủ, long viết hơi ngu xin thông cảm -->
 <script>
     var x = location.href;
-    let y=x.substr(0,x.length-1)
+    let y = x.substr(0, x.length - 1)
     var hero = document.getElementById('hero_banner');
     if (y === "{{url('/')}}") {
         hero.classList.remove("hero-normal");
     }
+</script>
+<script>
+    setTimeout(function() {
+        $('.alert').slideUp();
+    }, 4000);
 </script>
 @stack('scripts')

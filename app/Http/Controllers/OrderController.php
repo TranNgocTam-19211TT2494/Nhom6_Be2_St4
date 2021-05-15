@@ -158,4 +158,13 @@ class OrderController extends Controller
             return redirect()->back();
         }
     }
+    // PDF generate
+    public function pdfGenerate($id){
+        $order=Order::getAllOrder($id);
+        // return $order;
+        $file_name=$order->order_number.'-'.$order->first_name.'.pdf';
+        // return $file_name;
+        $pdf=PDF::loadview('backend.order.pdf',compact('order'));
+        return $pdf->download($file_name);
+    }
 }

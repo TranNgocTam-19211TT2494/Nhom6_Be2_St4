@@ -1,8 +1,9 @@
     <!-- Humberger Begin -->
     <div class="humberger__menu__overlay"></div>
+    @include('layouts.notification')
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
-            <a href="{{url('/')}}"><img src="{{asset('img/logo.png')}}" alt=""></a>
+            <a href="{{route('index')}}"><img src="{{asset('img/logo.png')}}" alt=""></a>
         </div>
         <div class="humberger__menu__cart">
             <ul>
@@ -13,17 +14,25 @@
         </div>
         <div class="humberger__menu__widget">
             <div class="header__top__right__language">
-                <img src="{{asset('img/language.png')}}" alt="">
-                <div>English</div>
-                <span class="arrow_carrot-down"></span>
-                <ul>
-                    <li><a href="#">Spanis</a></li>
-                    <li><a href="#">English</a></li>
-                </ul>
+                <a href="{{route('user.profile')}}"><i class="fas fa-truck"></i>Tracking</a>
+            </div>
+            @if (Auth::user())
+            <div class="header__top__right__auth">
+                <a href="{{route('user.profile')}}"><i class="fas fa-tasks"></i>DASHBOARD</a>
             </div>
             <div class="header__top__right__auth">
-                <a href="{{route('user.login')}}"><i class="fa fa-user"></i> Login</a>
+                <a href="{{route('user.logout')}}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+
             </div>
+            @else
+            <div class="header__top__right__auth">
+                <a href="{{route('user.login')}}"> Login</a>
+            </div>
+            <i class="fas fa-people-arrows"></i>
+            <div class="header__top__right__auth">
+                <a href="{{route('user.register')}}"> Register</a>
+            </div>
+            @endif
         </div>
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
@@ -79,17 +88,26 @@
                                 <a href="#"><i class="fa fa-pinterest-p"></i></a>
                             </div>
                             <div class="header__top__right__language">
-                                <img src="{{asset('img/language.png')}}" alt="">
-                                <div>English</div>
-                                <span class="arrow_carrot-down"></span>
-                                <ul>
-                                    <li><a href="#">Spanis</a></li>
-                                    <li><a href="#">English</a></li>
-                                </ul>
+                                <a href="{{route('user.profile')}}" style="color: black;"><i class="fas fa-truck"></i> Tracking</a>
+                            </div>
+                            @if (Auth::user())
+                            <div class="header__top__right__auth">
+                                <a href="{{route('user.profile')}}"><i class="fas fa-tasks"></i>DASHBOARD</a>
                             </div>
                             <div class="header__top__right__auth">
-                                <a href="{{route('user.login')}}"><i class="fa fa-user"></i> Login</a>
+                                <a href="{{route('user.logout')}}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+
                             </div>
+                            @else
+                            <div class="header__top__right__auth">
+                                <a href="{{route('user.login')}}"> Login</a>
+                            </div>
+                            <i class="fas fa-people-arrows"></i>
+                            <div class="header__top__right__auth">
+                                <a href="{{route('user.register')}}"> Register</a>
+                            </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
@@ -105,14 +123,14 @@
                 <div class="col-lg-6">
                     <nav class="header__menu">
                         <ul>
-                            <li class="active"><a href="{{url('/')}}">Home</a></li>
+                            <li class="active"><a href="./index.html">Home</a></li>
                             <li><a href="{{route('product.all')}}">Shop</a></li>
                             <li><a href="#">Pages</a>
                                 <ul class="header__menu__dropdown">
-                                <li><a href="{{route('product.all')}}">Shop Details</a></li>
-                        <li><a href="{{route('cart')}}">Shoping Cart</a></li>
-                        <li><a href="{{route('checkout')}}">Check Out</a></li>
-                        <li><a href="{{route('blog.all')}}">Blog Details</a></li>
+                                    <li><a href="{{route('product.all')}}">Shop Details</a></li>
+                                    <li><a href="{{route('cart')}}">Shoping Cart</a></li>
+                                    <li><a href="{{route('checkout')}}">Check Out</a></li>
+                                    <li><a href="{{route('blog.all')}}">Blog Details</a></li>
                                 </ul>
                             </li>
                             <li><a href="{{route('blog.all')}}">Blog</a></li>
