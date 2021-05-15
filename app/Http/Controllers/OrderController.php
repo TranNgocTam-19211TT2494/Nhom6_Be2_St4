@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderDetail;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Cart;
 use Str;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -91,7 +93,9 @@ class OrderController extends Controller
         // dd($users);   
 
         request()->session()->flash('success', 'Your product successfully placed in order');
-        return redirect()->route('home');
+        //gui mail
+        Mail::to($request->email)->send(new OrderDetail($order->id));
+        return redirect()->route('index');
     }
 
     /**
