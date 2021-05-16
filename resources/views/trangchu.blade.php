@@ -4,33 +4,46 @@
 <section class="categories">
     <div class="container">
         <div class="row">
+            @if (count($categories) >= 5)
+            <div class="categories__slider owl-carousel">
+                @foreach ($categories as $category)
+                <div class="col-lg-3">
+                    <div class="categories__item set-bg" data-setbg="{{$category->photo}}">
+                        <h5><a href="{{route('product.category',$category->id)}}">{{$category->title}}</a></h5>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            @else
             <div class="categories__slider owl-carousel">
                 <div class="col-lg-3">
-                    <div class="categories__item set-bg" data-setbg="img/categories/cat-1.jpg">
-                        <h5><a href="#">Fresh Fruit</a></h5>
+                    <div class="categories__item set-bg" data-setbg="{{asset('img/categories/cat-1.jpg')}}">
+                        <h5><a href="{{route('product.all')}}">Fresh Fruit</a></h5>
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="categories__item set-bg" data-setbg="img/categories/cat-2.jpg">
-                        <h5><a href="#">Dried Fruit</a></h5>
+                    <div class="categories__item set-bg" data-setbg="{{asset('img/categories/cat-2.jpg')}}">
+                        <h5><a href="{{route('product.all')}}">Dried Fruit</a></h5>
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="categories__item set-bg" data-setbg="img/categories/cat-3.jpg">
-                        <h5><a href="#">Vegetables</a></h5>
+                    <div class="categories__item set-bg" data-setbg="{{asset('img/categories/cat-3.jpg')}}">
+                        <h5><a href="{{route('product.all')}}">Vegetables</a></h5>
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="categories__item set-bg" data-setbg="img/categories/cat-4.jpg">
-                        <h5><a href="#">drink fruits</a></h5>
+                    <div class="categories__item set-bg" data-setbg="{{asset('img/categories/cat-4.jpg')}}">
+                        <h5><a href="{{route('product.all')}}">drink fruits</a></h5>
                     </div>
                 </div>
                 <div class="col-lg-3">
-                    <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
-                        <h5><a href="#">drink fruits</a></h5>
+                    <div class="categories__item set-bg" data-setbg="{{asset('img/categories/cat-5.jpg')}}">
+                        <h5><a href="{{route('product.all')}}">drink fruits</a></h5>
                     </div>
                 </div>
             </div>
+            @endif
+
         </div>
     </div>
 </section>
@@ -48,7 +61,6 @@
                     <ul>
                         <li class="active" data-filter="*">All</li>
                         @isset($cate1) <li data-filter=".{{$cate1->title}}">{{$cate1->title}}</li>@endisset
-
                         @isset($cate2) <li data-filter=".{{$cate2->title}}">{{$cate2->title}}</li>@endisset
                         @isset($cate3) <li data-filter=".{{$cate3->title}}">{{$cate3->title}}</li>@endisset
                         @isset($cate4) <li data-filter=".{{$cate4->title}}">{{$cate4->title}}</li>@endisset
@@ -91,7 +103,7 @@
                         <ul class="featured__item__pic__hover">
                             <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-retweet"></i></a></li> -->
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            <li><a href="{{route('cart.add',$product->slug)}}"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
                     <div class="featured__item__text">
@@ -113,7 +125,7 @@
                         <ul class="featured__item__pic__hover">
                             <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-retweet"></i></a></li> -->
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            <li><a href="{{route('cart.add',$product->slug)}}"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
                     <div class="featured__item__text">
@@ -135,7 +147,7 @@
                         <ul class="featured__item__pic__hover">
                             <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-retweet"></i></a></li> -->
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            <li><a href="{{route('cart.add',$product->slug)}}"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
                     <div class="featured__item__text">
@@ -369,16 +381,25 @@
 <!-- Blog Section End -->
 @endsection
 @section('banner')
+@if(isset($mainBanner))
 <div class="hero__item set-bg" data-setbg="{{$mainBanner->photo}}">
     <div class="hero__text">
         <span>OGANI SHOP</span>
-        @if(isset($mainBanner))
         <h2>{{$mainBanner->title}} <br />100% Organic</h2>
         <p>{!!$mainBanner->description!!}</p>
         <a href="{{route('product.all')}}" class="primary-btn">SHOP NOW</a>
-        @endif
     </div>
 </div>
+@else
+<div class="hero__item set-bg" data-setbg="{{asset('img/hero/banner.jpg')}}">
+    <div class="hero__text">
+        <span>FRUIT FRESH</span>
+        <h2>Vegetable <br />100% Organic</h2>
+        <p>Free Pickup and Delivery Available</p>
+        <a href="{{route('product.all')}}" class="primary-btn">SHOP NOW</a>
+    </div>
+</div>
+@endif
 @endsection
 
 @push('styles')

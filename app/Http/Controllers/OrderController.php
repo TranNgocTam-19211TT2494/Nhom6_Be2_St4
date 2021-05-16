@@ -6,8 +6,9 @@ use App\Mail\OrderDetail;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Cart;
-use Str;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class OrderController extends Controller
 {

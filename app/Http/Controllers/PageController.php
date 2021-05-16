@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\User;
-use Auth;
-use Hash;
 use App\Models\Cart;
 use App\Models\Post;
 use App\Models\PostCategory;
@@ -15,6 +13,7 @@ use App\Models\ProductReview;
 use App\Models\Banner;
 use App\Models\UserActivation;
 use App\Classes\ActivationService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 
@@ -30,7 +29,7 @@ class PageController extends Controller
         $cate2 = Category::with('products')->where('id', 2)->first();
         $cate3 = Category::with('products')->where('id', 3)->first();
         $cate4 = Category::with('products')->where('id', 4)->first();
-
+        $categories=Category::all();
         //banner
         $banner = Banner::where('status', 'active')->first();
         //banner inactive
@@ -43,7 +42,8 @@ class PageController extends Controller
             ->with('hot', $hotProducts)
             ->with('posts', $posts)
             ->with('mainBanner', $banner)
-            ->with('subBanner' , $bannerinactive);
+            ->with('subBanner', $bannerinactive)
+            ->with('categories',$categories);
     }
     //Trang login của user
     public function userLogin()
@@ -113,14 +113,14 @@ class PageController extends Controller
     //Trang gio hang
     public function cart()
     {
-        $cart = Cart::with('product')->where('order_id', null)->orderBy('id', 'ASC')->paginate(15);
+        $cart = Cart::with('product')->where('order_id', null)->where('user_id', Auth::user()->id)->orderBy('id', 'ASC')->paginate(15);
         // dd($cart);
         return view('page.cart')->with('cart', $cart);
     }
     //Trang check out
     public function checkout()
     {
-        $cart = Cart::with('product')->orderBy('id', 'ASC')->get();
+        $cart = Cart::with('product')->where('order_id', null)->where('user_id', Auth::user()->id)->orderBy('id', 'ASC')->get();
         return view('page.checkout')->with('cart', $cart);
     }
     //Trang blog : 
@@ -187,19 +187,22 @@ class PageController extends Controller
         return view('page.product-detail', ['products' => $products, 'product_reviews' => $product_reviews, 'categories' => $categories]);
     }
     //Trang user profile
-    public function adminProfile(){
-        $profile=Auth()->user();
-        return view('backend.users.profile')->with('profile',$profile);
+    public function adminProfile()
+    {
+        $profile = Auth()->user();
+        return view('backend.users.profile')->with('profile', $profile);
     }
     //Trang đổi password
-    public function changePassword(){
-        $profile=Auth()->user();
-        return view('backend.layouts.changePassword')->with('profile',$profile);
+    public function changePassword()
+    {
+        $profile = Auth()->user();
+        return view('backend.layouts.changePassword')->with('profile', $profile);
     }
     //Trang đổi password cua user
-    public function changeUserPassword(){
-        $profile=Auth()->user();
-        return view('user.layouts.userPasswordChange')->with('profile',$profile);
+    public function changeUserPassword()
+    {
+        $profile = Auth()->user();
+        return view('user.layouts.userPasswordChange')->with('profile', $profile);
     }
     //Tìm kiếm sản phẩm
     public function productSearch(Request $request)
