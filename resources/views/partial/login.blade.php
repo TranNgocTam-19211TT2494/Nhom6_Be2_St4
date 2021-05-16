@@ -60,7 +60,7 @@
                                         <button class="btn site-btn" type="submit">Login</button>
                                         <button class="btn site-btn" formaction="">Register</button>
                                         OR @if (Route::has('password.request'))
-                                            <a class="lost" href="">
+                                            <a class="lost" href="{{ route('password.request') }}">
                                                 Lost your password?
                                             </a>
                                             @endif

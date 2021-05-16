@@ -32,9 +32,19 @@
                 <a href="{{route('user.profile')}}"><i class="fas fa-truck"></i>Tracking</a>
             </div>
             @if (Auth::user())
+            @auth
+            @if (Auth::user()->role=='admin')
             <div class="header__top__right__auth">
                 <a href="{{route('user.profile')}}"><i class="fas fa-tasks"></i>DASHBOARD</a>
             </div>
+            @else
+            <div class="header__top__right__auth">
+                <a href="{{route('admin')}}"><i class="fas fa-tasks"></i>ADMIN</a>
+            </div>
+            @endif
+            @endauth
+
+
             <div class="header__top__right__auth">
                 <a href="{{route('user.logout')}}"><i class="fas fa-sign-out-alt"></i>Logout</a>
 
@@ -106,9 +116,17 @@
                                 <a href="{{route('user.profile')}}" style="color: black;"><i class="fas fa-truck"></i> Tracking</a>
                             </div>
                             @if (Auth::user())
+                            @auth
+                            @if (Auth::user()->role=='user')
                             <div class="header__top__right__auth">
                                 <a href="{{route('user.profile')}}"><i class="fas fa-tasks"></i>DASHBOARD</a>
                             </div>
+                            @else
+                            <div class="header__top__right__auth">
+                                <a href="{{route('admin')}}"><i class="fas fa-tasks"></i>ADMIN</a>
+                            </div>
+                            @endif
+                            @endauth
                             <div class="header__top__right__auth">
                                 <a href="{{route('user.logout')}}"><i class="fas fa-sign-out-alt"></i>Logout</a>
 
