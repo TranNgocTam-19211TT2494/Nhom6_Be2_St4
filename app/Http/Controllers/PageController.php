@@ -186,18 +186,6 @@ class PageController extends Controller
         $categories = Category::all();
         return view('page.product-detail', ['products' => $products, 'product_reviews' => $product_reviews, 'categories' => $categories]);
     }
-    //Tìm kiếm category:
-    public function productSearch(Request $request)
-    {
-        $tukhoa = $request->get('tukhoa');
-        //cần có append để truyền từ khóa lên trang địa chỉ khi chọn vào trang 2->...
-        $products = Product::where('title', 'like', "%$tukhoa%")
-            ->orWhere('description', 'like', "%$tukhoa%")->take(30)->paginate(4)->appends(['tukhoa' => $tukhoa]);
-        //return view('pages.timkiem', compact('tintuc'));
-        $categories = Category::where('title', 'like', "%$tukhoa%")
-            ->orWhere('summary', 'like', "%$tukhoa%")->take(30)->paginate(4)->appends(['tukhoa' => $tukhoa]);
-        return view('page.product-list', ['products' => $products, 'categories' => $categories]);
-    }
     //Trang user profile
     public function adminProfile(){
         $profile=Auth()->user();
@@ -212,5 +200,18 @@ class PageController extends Controller
     public function changeUserPassword(){
         $profile=Auth()->user();
         return view('user.layouts.userPasswordChange')->with('profile',$profile);
+    }
+    //Tìm kiếm sản phẩm
+    public function productSearch(Request $request)
+    {
+        //return $request;
+        $tukhoa = $request->get('tukhoa');
+        //cần có append để truyền từ khóa lên trang địa chỉ khi chọn vào trang 2->...
+        $products = Product::where('title', 'like', "%$tukhoa%")
+            ->orWhere('description', 'like', "%$tukhoa%")->take(30)->paginate(4)->appends(['tukhoa' => $tukhoa]);
+        $categories = Category::all();
+        return view('page.find_product')
+            ->with('products', $products)
+            ->with('categories', $categories);
     }
 }

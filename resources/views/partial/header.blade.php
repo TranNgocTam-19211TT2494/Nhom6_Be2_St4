@@ -7,10 +7,25 @@
         </div>
         <div class="humberger__menu__cart">
             <ul>
-                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="{{route('cart')}}"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                @isset(Auth::user()->id)
+                <li><a href="{{route('cart')}}"><i class="fa fa-shopping-bag"></i> <span>@php
+                            $cartItem=DB::table('carts')
+                            ->where('order_id',null)->where('user_id',Auth::user()->id)->sum('quantity');
+                            echo $cartItem;
+                            @endphp</span></a></li>
+                @else
+                <li><a href="{{route('cart')}}"><i class="fa fa-shopping-bag"></i> <span>0</span></a></li>
+                @endisset
             </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
+            @isset(Auth::user()->id)
+            <div class="header__cart__price">item: <span>@php
+                    $cartItem=DB::table('carts')
+                    ->where('order_id',null)->where('user_id',Auth::user()->id)->sum('amount');
+                    echo number_format($cartItem);
+                    @endphp</span></div>
+            @else
+            <div class="header__cart__price">item: <span>0.00</span></div>
+            @endisset
         </div>
         <div class="humberger__menu__widget">
             <div class="header__top__right__language">
@@ -141,9 +156,27 @@
                 <div class="col-lg-3">
                     <div class="header__cart">
                         <ul>
-                            <li><a href="{{route('cart')}}"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            @isset(Auth::user()->id)
+                            <li><a href="{{route('cart')}}"><i class="fa fa-shopping-bag"></i> <span>@php
+                                        $cartItem=DB::table('carts')
+                                        ->where('order_id',null)->where('user_id',Auth::user()->id)->sum('quantity');
+                                        echo $cartItem;
+                                        @endphp</span></a></li>
+                            @else
+                            <li><a href="{{route('cart')}}"><i class="fa fa-shopping-bag"></i> <span>0</span></a></li>
+                            @endisset
+
                         </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
+                        @isset(Auth::user()->id)
+                        <div class="header__cart__price">item: <span>@php
+                                $cartItem=DB::table('carts')
+                                ->where('order_id',null)->where('user_id',Auth::user()->id)->sum('amount');
+                                echo number_format($cartItem);
+                                @endphp</span></div>
+                        @else
+                        <div class="header__cart__price">item: <span>0.00</span></div>
+                        @endisset
+
                     </div>
                 </div>
             </div>
@@ -174,8 +207,8 @@
                 <div class="col-lg-9">
                     <div class="hero__search">
                         <div class="hero__search__form">
-                            <form action="#">
-                                <input type="text" placeholder="What do yo u need?">
+                            <form action="{{route('product.search')}}" method="get">
+                                <input type="text" placeholder="What do yo u need?" name="tukhoa">
                                 <button type="submit" class="site-btn">SEARCH</button>
                             </form>
                         </div>

@@ -47,6 +47,7 @@ Route::get('product', 'PageController@ShowProduct')->name('product.all');
 Route::get('product/{slug}', 'PageController@getProductBySlug')->name('product.detail');
 Route::get('product/{id}', 'PageController@getCategogyBySlug');
 Route::get('product/category/{id}', 'PageController@getCategogyProductById')->name('product.category');
+Route::get('product/search/key','PageController@productSearch')->name('product.search');
 //End - PageController
 
 //Export pdf order detail

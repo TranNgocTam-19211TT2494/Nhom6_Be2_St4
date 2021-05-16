@@ -84,24 +84,39 @@
                             <div class="checkout__order__products">Products <span>Total</span></div>
                             <ul>
                                 @isset($cart)
-
+                                @php
+                                $shippingFee=0;
+                                $weightSum=0;
+                                @endphp
                                 @if ($cart->isNotEmpty())
                                 @foreach ($cart as $item)
                                 <li>{{$item->product->title}} <span>{{number_format($item->amount)}}</span></li>
+                                @php
+                                $weightSum += $item->product->weight;
+                                @endphp
                                 @endforeach
                                 @endif
                                 @endisset
                             </ul>
                             <div class="checkout__order__subtotal">Subtotal <span>{{number_format($cart->sum('amount'))}}</span></div>
                             <input type="hidden" name="sub_total" value="{{$cart->sum('amount')}}">
+                            @php
+                            if($weightSum >= 1000 || $cart->sum('amount') >= 1000000)
+                            {
+                            $shippingFee = 0;
+                            }else{
+                            $shippingFee = 25000;
+                            }
+                            @endphp
+                            <div class="checkout__order__total">Shipping Fee <span>{{$shippingFee}}</span></div>
                             @if(session()->has('coupon'))
                             <div class="checkout__order__total">Copoun <span>{{number_format(Session::get('coupon')['value'])}}</span></div>
                             <input type="hidden" name="coupon" value="{{Session::get('coupon')['value']}}">
-                            <div class="checkout__order__total">Total <span>{{number_format(($cart->sum('amount'))-(Session::get('coupon')['value']))}}</span></div>
-                            <input type="hidden" name="total" value="{{($cart->sum('amount')-(Session::get('coupon')['value']))}}">
+                            <div class="checkout__order__total">Total <span>{{number_format(($cart->sum('amount'))-(Session::get('coupon')['value'])+$shippingFee)}}</span></div>
+                            <input type="hidden" name="total" value="{{($cart->sum('amount')-(Session::get('coupon')['value'])+$shippingFee)}}">
                             @else
-                            <div class="checkout__order__total">Total <span>{{number_format($cart->sum('amount'))}}</span></div>
-                            <input type="hidden" name="total" value="{{$cart->sum('amount')}}">
+                            <div class="checkout__order__total">Total <span>{{number_format($cart->sum('amount')+$shippingFee)}}</span></div>
+                            <input type="hidden" name="total" value="{{$cart->sum('amount')+$shippingFee}}">
                             @endif
                             <div class="checkout__input__checkbox">
                                 <label for="paypal">

@@ -145,19 +145,19 @@ class UserController extends Controller
         }
         return redirect()->route('users.index');
     }
-    public function profileUpdate(Request $request,$id){
+    public function profileUpdate(Request $request, $id)
+    {
         // return $request->all();
-        $user=User::findOrFail($id);
-        $data=$request->all();
+        $user = User::findOrFail($id);
+        $data = $request->all();
         $user->fill($data);
-        $user['name']=$request->name;
-        $user['photo']=$request->photo;
-        $status=$user->save();
-        if($status){
-            request()->session()->flash('success','Successfully updated your profile');
-        }
-        else{
-            request()->session()->flash('error','Please try again!');
+        $user['name'] = $request->name;
+        $user['photo'] = $request->photo;
+        $status = $user->save();
+        if ($status) {
+            request()->session()->flash('success', 'Successfully updated your profile');
+        } else {
+            request()->session()->flash('error', 'Please try again!');
         }
         return redirect()->back();
     }
@@ -175,21 +175,23 @@ class UserController extends Controller
         return redirect()->route('user.profile');
     }
     //Trang profile của user
-    public function userProfile(){
-        $profile=Auth()->user();
-        return view('user.users.profile')->with('profile',$profile);
+    public function userProfile()
+    {
+        $profile = Auth()->user();
+        return view('user.users.profile')->with('profile', $profile);
     }
     //Hiển thị toàn bộ order của user
-    public function userOrder($id){
-        $order=Order::find($id);
+    public function userOrder($id)
+    {
+        $order = Order::find($id);
         // return $order;
-        return view('user.order.show')->with('order',$order);
+        return view('user.order.show')->with('order', $order);
     }
     //Active user
     public function activeUser($token)
     {
         $userActivation = new UserActivation;
-        $active= new ActivationService($userActivation);
+        $active = new ActivationService($userActivation);
         $active->activateUser($token);
         return redirect()->route('index');
     }
