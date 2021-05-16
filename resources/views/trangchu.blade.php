@@ -72,7 +72,7 @@
         <div class="row featured__filter">
             @isset($cate1)
             @foreach ($cate1->products->take(6) as $product)
-            <div class="col-lg-3 col-md-4 col-sm-6 {{$cate1->title}}">
+            <div class="col-lg-3 col-md-4 col-sm-6 mix {{$cate1->title}}">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg" data-setbg="@php
                 $image=explode(',',$product->photo);
@@ -94,7 +94,7 @@
             @endisset
             @isset($cate2)
             @foreach ($cate2->products->take(6) as $product)
-            <div class="col-lg-3 col-md-4 col-sm-6 mix {{$cate2->title}}">
+            <div class="col-lg-3 col-md-4 col-sm-6 {{$cate2->title}}">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg" data-setbg="@php
                 $image=explode(',',$product->photo);
@@ -116,7 +116,7 @@
             @endisset
             @isset($cate3)
             @foreach ($cate3->products->take(6) as $product)
-            <div class="col-lg-3 col-md-4 col-sm-6 mix {{$cate2->title}}">
+            <div class="col-lg-3 col-md-4 col-sm-6 {{$cate3->title}}">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg" data-setbg="@php
                 $image=explode(',',$product->photo);
@@ -138,7 +138,7 @@
             @endisset
             @isset($cate4)
             @foreach ($cate4->products->take(6) as $product)
-            <div class="col-lg-3 col-md-4 col-sm-6 mix {{$cate2->title}}">
+            <div class="col-lg-3 col-md-4 col-sm-6 {{$cate4->title}}">
                 <div class="featured__item">
                     <div class="featured__item__pic set-bg" data-setbg="@php
                 $image=explode(',',$product->photo);
