@@ -23,8 +23,8 @@ Route::get('/', 'PageController@index')->name('index');
 //Trang contact
 Route::get('/contact', 'PageController@contact')->name('contact');
 //Cart
-Route::get('cart', 'PageController@cart')->name('cart');
-Route::get('cart/add/{slug}', 'CartController@addToCart')->name('cart.add');
+Route::get('cart', 'PageController@cart')->name('cart')->middleware('checkLogin');
+Route::get('cart/add/{slug}', 'CartController@addToCart')->name('cart.add')->middleware('checkLogin');
 Route::get('cart/delete/{id}', 'CartController@cartDelete')->name('cart.delete');
 Route::post('cart/update', 'CartController@cartUpdate')->name('cart.update');
 
@@ -32,9 +32,9 @@ Route::post('cart/update', 'CartController@cartUpdate')->name('cart.update');
 Route::post('/coupon/apply', 'CouponController@couponApply')->name('coupon.apply');
 
 //Checkout
-Route::get('checkout', 'PageController@checkout')->name('checkout');
+Route::get('checkout', 'PageController@checkout')->name('checkout')->middleware('checkLogin');
 //Place order
-Route::post('place-order', 'OrderController@store')->name('order.store');
+Route::post('place-order', 'OrderController@store')->name('order.store')->middleware('checkLogin');
 
 //--- Begin Blog ---
 Route::get('blog', 'PageController@getBlog')->name('blog.all');
@@ -47,46 +47,44 @@ Route::get('product', 'PageController@ShowProduct')->name('product.all');
 Route::get('product/{slug}', 'PageController@getProductBySlug')->name('product.detail');
 Route::get('product/{id}', 'PageController@getCategogyBySlug');
 Route::get('product/category/{id}', 'PageController@getCategogyProductById')->name('product.category');
-Route::get('product/search/key','PageController@productSearch')->name('product.search');
+Route::get('product/search/key', 'PageController@productSearch')->name('product.search');
 //End - PageController
 
 //Export pdf order detail
-Route::get('order/pdf/{id}', 'OrderController@pdfGenerate')->name('order.pdf');
+Route::get('order/pdf/{id}', 'OrderController@pdfGenerate')->name('order.pdf')->middleware('checkLogin');
 
 //File manager
-Route::group(['prefix' => 'filemanager', 'middleware' => ['web',]], function () {
+Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth', 'checkRole:admin,mod,writer']], function () {
     Lfm::routes();
 });
 
 
 // Backend (ADMIN) section start
-Route::group(['prefix' => '/admin',], function () {
+Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'checkRole:admin,mod,writer']], function () {
     //Category
-    Route::resource('category', 'CategoryController');
+    Route::resource('category', 'CategoryController')->middleware('checkRole:admin,mod');
     //Product
-    Route::resource('product', 'ProductController');
+    Route::resource('product', 'ProductController')->middleware('checkRole:admin,mod');
     //Coupon
-    Route::resource('coupon', 'CouponController');
+    Route::resource('coupon', 'CouponController')->middleware('checkRole:admin,mod');
     //Order
-    Route::resource('order', 'OrderController');
+    Route::resource('order', 'OrderController')->middleware('checkRole:admin,mod');
     //Product Rating
-    Route::resource('rate', 'ProductReviewController');
+    Route::resource('rate', 'ProductReviewController')->middleware('checkRole:admin,mod');
     //Banner
-    Route::resource('banner', 'BannerController');
+    Route::resource('banner', 'BannerController')->middleware('checkRole:admin,mod');
     //Post Tag
-    Route::resource('postTag', 'PostTagController');
+    Route::resource('postTag', 'PostTagController')->middleware('checkRole:admin,mod');
     //Post
-    Route::resource('blog', 'PostController');
-    //wishlist
-    Route::resource('wishlist', 'WishlistController');
+    Route::resource('blog', 'PostController')->middleware('checkRole:admin,mod,writer');
     //Users
-    Route::resource('users', 'UserController');
+    Route::resource('users', 'UserController')->middleware('checkRole:admin');
     //User profile
     Route::get('profile', 'AdminController@profile')->name('profile');
     //Admin
     Route::get('/', 'AdminController@index')->name('admin');
     //Post Caterogy :
-    Route::resource('blogcategory', 'PostCategoryController');
+    Route::resource('blogcategory', 'PostCategoryController')->middleware('checkRole:admin,mod,writer');
     //admin profile
     Route::get('profile/', 'PageController@adminProfile')->name('admin.profile');
     Route::post('/profile/{id}', 'UserController@profileUpdate')->name('admin.profile.update');
@@ -97,7 +95,7 @@ Route::group(['prefix' => '/admin',], function () {
 
 //User section start
 Route::group(['prefix' => '/user',], function () {
-    Route::get('/profile', 'UserController@userProfile')->name('user.profile');
+    Route::get('/profile', 'UserController@userProfile')->name('user.profile')->middleware('checkLogin');
     Route::get('/changepassword', 'PageController@changeUserPassword')->name('user.change.password');
     Route::post('/changepassword/save', 'UserController@changPasswordStore')->name('user.changepass.save');
     //User Login
@@ -114,9 +112,11 @@ Route::group(['prefix' => '/user',], function () {
     //Xac thuc user
     Route::get('/activation/{token}', 'UserController@activeUser')->name('user.activate');
     //  Order
-    Route::get('/order', "UserController@orderIndex")->name('user.order.index');
+    Route::get('/order', "UserController@orderIndex")->name('user.order.index')->middleware('checkLogin');
     Route::get('/order/show/{id}', "UserController@orderShow")->name('user.order.show');
     Route::delete('/order/delete/{id}', 'UserController@userOrderDelete')->name('user.order.delete');
+    //wishlist
+    Route::resource('wishlist', 'WishlistController')->middleware('checkLogin');
 });
 
 // End user secsion
