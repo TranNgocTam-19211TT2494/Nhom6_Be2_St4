@@ -16,8 +16,8 @@ class ProductReviewController extends Controller
     public function index()
     {
         //
-        $reviews = ProductReview::all();
-        return view('backend.review.index')->with('reviews', $reviews);
+        $reviews = ProductReview::orderBy('id', 'DESC')->paginate(10);
+        return view('backend.review.index')->with('product_reviews', $reviews);
     }
 
     /**
@@ -42,11 +42,11 @@ class ProductReviewController extends Controller
         $this->validate($request, [
             'rate' => 'required|numeric|min:1'
         ]);
-        $product_info = Product::getProductBySlug($request->slug);
+        //$product_info = Product::getProductBySlug($request->slug);
         //  return $product_info;
         // return $request->all();
         $data = $request->all();
-        $data['product_id'] = $product_info->id;
+        $data['product_id'] = $request->product_id;
         $data['user_id'] = $request->user()->id;
         $data['status'] = 'active';
         // dd($data);
@@ -109,6 +109,6 @@ class ProductReviewController extends Controller
         } else {
             request()->session()->flash('error', 'Something went wrong! Try again');
         }
-        return redirect()->route('review.index');
+        return redirect()->route('rate.index');
     }
 }

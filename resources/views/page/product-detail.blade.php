@@ -3,7 +3,7 @@
 @php $photos = explode(',',$products->photo); @endphp
 
 <!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-section set-bg" data-setbg="{{asset('img/breadcrumb.jpg')}}">
+<section class="breadcrumb-section set-bg" data-setbg="{{asset('/img/breadcrumb.jpg')}}">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -11,7 +11,7 @@
                     <h2>{{$products->title}}</h2>
                     <div class="breadcrumb__option">
                         <a href="{{asset('/')}}">Home</a>
-                        <a href="{{asset('/')}}">{{$products->title}}</a>
+                        <a href="{{route('product.detail',$products->slug)}}">{{$products->title}}</a>
                         <span>{{$products->cat_info['title']}}</span>
                     </div>
                 </div>
@@ -134,25 +134,26 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__tab__desc">
-                                <h6>Products Infomation</h6>
+                                <h6>Products Summary</h6>
                                 <p>{!!$products->summary!!}</p>
 
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="product__details__tab__desc">
-                                <h6>Products Infomation</h6>
-                                <p>{!!$products->summary!!}</p>
+                                <h6>Products Description</h6>
                                 <p>{!!$products->description!!}</p>
                             </div>
                         </div>
                         <!-- Xử lý thông kê đánh giá -->
                         @php
+                        //Gom nhóm xem tổng sao
                         $arrayDashaboard = App\Models\ProductReview::groupBy('rate')
                         ->where('product_id',$products->id)
                         ->select(DB::raw('count(rate) as total'),DB::raw('sum(rate) as sum'))
                         ->addSelect('rate')
                         ->get()->toArray();
+
 
                         $arrayRatings = [];
                         if(!empty($arrayDashaboard)) {
@@ -173,32 +174,51 @@
                             <!-- Tab Đánh giá -->
                             <div class="tab-pane" id="tabs-3" role="tabpanel">
                                 <!-- Bảng thông kê đánh giá sản phẩm -->
-                                <!-- <div class="product__details__tab__desc">
-                                <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;">Evaluation Statistics Product</h6>
-                                <div class="toprt">
-                                    
-                                    <div class="crt">
-                                        <div class="lcrt " data-gpa="4.7">
-                                            <b>4.7<i class="fa fa-star"></i></b>
-                                        </div>
-                                        <div class="rcrt">
-                                            <div class="r">
-                                                <span class="t">5 <i class="fa fa-star"></i></span>
-                                                <div class="bgb">
-                                                    <div class="bgb-in" style="width: 73%"></div>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <div class="product__details__tab__desc">
+                                            @if($arrayRatings)
+                                            <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;">Đánh giá Sản Phẩm {{$products->title}}</h6>
+                                            <div class="toprt">
+                                                <div class="crt">
+                                                    <div class="lcrt" data-gpa="{{$itemAge}}">
+                                                        <b>{{$itemAge}}<i class="fa fa-star"></i></b>
+                                                    </div>
+                                                    @foreach($arrayRatings as $key => $arrayRating)
+                                                    @php
+                                                    $itemAge = 0;
+                                                    $itemAge = round(($arrayRating['total'] / $numberRate) * 100,0);
+                                                    @endphp
+                                                    <div class="rcrt">
+                                                        <div class="r">
+                                                            <span class="t">
+                                                                {{$key}} <i class="fa fa-star"></i>
+
+                                                            </span>
+                                                            <div class="bgb">
+                                                                <div class="bgb-in" style="width: {{$itemAge}}%"></div>
+                                                            </div>
+                                                            <span class="c" data-buy="{{$itemAge}}"><strong>{{$arrayRating['total']}}</strong> đánh giá ({{$itemAge}}%) </span>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
                                                 </div>
-                                                <span class="c" data-buy="29"><strong>38</strong> đánh giá</span>
                                             </div>
+                                            @else
+                                            <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;">{{$products->title}} vẫn chưa có đánh giá nào!!</h6>
+                                            @endif
                                         </div>
                                     </div>
+                                    <div class="col-md-2">
+
+                                    </div>
                                 </div>
-                            </div> -->
+
 
                                 <!-- End Rating reviews -->
                                 <!-- Review -->
                                 <div class="product__details__tab__desc">
-
-                                    <h6>Review Product</h6>
+                                    <h6>Chọn Đánh giá</h6>
                                     @if (session('status'))
                                     <div class="alert alert-success">
                                         {{ session('status') }}
@@ -213,33 +233,54 @@
                                         <div class="row">
                                             <div class="col-lg-12 col-12">
                                                 <div class="rating_box">
+
                                                     <div class="star-rating">
+                                                        @php
+                                                        $listRatingStart = [
+                                                        1 => 'Không thích',
+                                                        2 => 'Tạm được',
+                                                        3 => 'Bình thường',
+                                                        4 => 'Rất tốt',
+                                                        5 => 'Tuyệt vời',
+                                                        ];
+                                                        @endphp
                                                         <div class="form-group wrapper">
                                                             <input type="checkbox" name="rate" id="st1" value="1" />
                                                             <label for="st1"></label>
                                                         </div>
+
                                                         <div class="form-group wrapper">
                                                             <input type="checkbox" name="rate" id="st2" value="2" />
                                                             <label for="st2"></label>
+
                                                         </div>
                                                         <div class="form-group wrapper">
                                                             <input type="checkbox" name="rate" id="st3" value="3" />
                                                             <label for="st3"></label>
+
                                                         </div>
                                                         <div class="form-group wrapper">
                                                             <input type="checkbox" name="rate" id="st4" value="4" />
                                                             <label for="st4"></label>
+
                                                         </div>
                                                         <div class="form-group wrapper">
                                                             <input type="checkbox" name="rate" id="st5" value="5" />
                                                             <label for="st5"></label>
+
                                                         </div>
+
                                                         @error('rate')
                                                         <span class="text-danger">{{$message}}</span>
                                                         @enderror
 
                                                     </div>
+
+
+                                                    <!-- Rating view -->
+                                                    <span class="list_text_rating">Tốt</span>
                                                 </div>
+
                                             </div>
                                             <div class="form-group">
                                                 <input type="hidden" name="product_id" class="form-control" value="{{ $products->id }}">
@@ -367,7 +408,7 @@
                         </ul>
                     </div>
                     <div class="product__item__text">
-                        <h6><a href="#">{{$product->title}}</a></h6>
+                        <h6><a href="{{route('product.detail',$product->slug)}}">{{$product->title}}</a></h6>
                         <h5>{{number_format($product->price)}}đ</h5>
                     </div>
                 </div>
@@ -376,7 +417,7 @@
             @else
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-1.jpg">
+                    <div class="product__item__pic set-bg" data-setbg="{{asset('img/product/product-1.jpg')}}">
                         <ul class="product__item__pic__hover">
                             <li><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
@@ -395,13 +436,71 @@
 </section>
 <!-- Related Product Section End -->
 @endsection
-
+<!-- Javascript -->
 @push('scripts')
+<script>
+    $(function() {
+        let listStart = $(".wrapper input");
 
+        listRatingStart = {
+            1: 'Không thích',
+            2: 'Tạm được',
+            3: 'Bình thường',
+            4: 'Rất tốt',
+            5: 'Tuyệt vời',
+        };
+        listStart.change(function() {
+            let $this = $(this);
+
+            let number = $this.attr('value');
+            listStart.removeClass('rating_active');
+
+            $.each(listStart, function(key, value) {
+
+                if (key + 1 <= number) {
+                    $(this).addClass('rating_active')
+                }
+            });
+            $(".list_text_rating").text('').text(listRatingStart[number]);
+
+
+        });
+    });
+</script>
 @endpush
+
 @push('styles')
 <style>
     /* Bảng thông kê đánh giá */
+    .list_text_rating {
+        display: inline-block;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        position: relative;
+        background: #52b858;
+        color: #fff;
+        padding: 20px 10px;
+        box-sizing: border-box;
+        font-size: 12px;
+        border-radius: 2px;
+
+    }
+
+    .list_text_rating::after {
+        right: 100%;
+        top: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(82, 184, 88, 0);
+        border-right-color: #52b858;
+        border-width: 6px;
+        margin-top: -10px;
+    }
+
     .toprt {
         border: solid 1px #ddd;
         border-radius: 5px;
@@ -412,6 +511,7 @@
     .crt {
         height: 120px;
         box-sizing: border-box;
+        overflow: overlay;
     }
 
     .crt .lcrt {
@@ -440,8 +540,8 @@
         font-size: 13px;
         overflow: hidden;
         box-sizing: border-box;
-        padding: 10px 0;
-        width: 45%;
+        padding: 1px 0;
+        width: 75%;
         float: left;
         border-right: solid 1px #eee;
     }
@@ -476,6 +576,7 @@
         display: inline-block;
         color: #288ad6;
         cursor: pointer;
+        font: message-box;
     }
 
     /* reviews */
@@ -511,6 +612,9 @@
         font-size: 14px;
     }
 
+    /* .wrapper .rating_active {
+    color: yellow!important;
+} */
     .wrapper input {
         border: 0;
         width: 1px;

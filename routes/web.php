@@ -42,6 +42,8 @@ Route::get('blog/{slug}', 'PageController@getBlogDetailByID')->name('blog.detail
 Route::get('blog/category/{id}', 'PageController@getBlogCategoryByID')->name('blog.category');
 Route::get('blog/search/key', 'PageController@blogSearch')->name('blog.search');
 //--- End Blog ---
+
+
 //--- Begin Shop ---
 Route::get('product', 'PageController@ShowProduct')->name('product.all');
 Route::get('product/{slug}', 'PageController@getProductBySlug')->name('product.detail');
@@ -50,11 +52,16 @@ Route::get('product/category/{id}', 'PageController@getCategogyProductById')->na
 Route::get('product/search/key', 'PageController@productSearch')->name('product.search');
 //End - PageController
 
+//Trang danh sách yêu thích
+Route::get('wishlist/', 'PageController@showWishList')->name('wishlist.show')->middleware('checkLogin');
+Route::get('wishlist/add/{productId}', 'PageController@addWishList')->name('wishlist.add')->middleware('checkLogin');
+Route::get('wishlist/remove/{productId}', 'PageController@removeWishList')->name('wishlist.remove');
+
 //Export pdf order detail
 Route::get('order/pdf/{id}', 'OrderController@pdfGenerate')->name('order.pdf')->middleware('checkLogin');
 
 //File manager
-Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth', 'checkRole:admin,mod,writer']], function () {
+Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], function () {
     Lfm::routes();
 });
 
@@ -94,7 +101,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'checkRole:admin,mo
 // End backend section
 
 //User section start
-Route::group(['prefix' => '/user',], function () {
+Route::group(['prefix' => '/user'], function () {
     Route::get('/profile', 'UserController@userProfile')->name('user.profile')->middleware('checkLogin');
     Route::get('/changepassword', 'PageController@changeUserPassword')->name('user.change.password');
     Route::post('/changepassword/save', 'UserController@changPasswordStore')->name('user.changepass.save');
@@ -120,3 +127,4 @@ Route::group(['prefix' => '/user',], function () {
 });
 
 // End user secsion
+

@@ -15,6 +15,9 @@ use App\Models\UserActivation;
 use App\Classes\ActivationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Models\Wishlist;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 
 class PageController extends Controller
@@ -216,5 +219,30 @@ class PageController extends Controller
         return view('page.find_product')
             ->with('products', $products)
             ->with('categories', $categories);
+    }
+    //Wishlist
+    public function addWishList($productId){
+        
+        $wishList = new Wishlist;
+        $wishList->user_id = Auth::user()->id;
+        $wishList->product_id = $productId;
+        $wishList->save();
+        return back();
+    }
+
+    public function showWishList(){
+        $products = DB::table('wishlists')
+        ->leftJoin('products', 'wishlists.product_id' , '=' , 'products.id')
+        ->join('users','users.id','=','wishlists.user_id')
+        ->selectRaw('users.id as id_user, users.name as name_user, products.*, wishlists.id as id_wishlist')
+        ->where('user_id',Auth::user()->id)
+      //   ->orderBy('id','DESC')->paginate(6)
+        ->get();
+        return view('page.Wishlist' , compact('products'));
+    }
+    public function removeWishList($productId){
+        //echo  $id;
+        DB::table('wishlists')->where('product_id', '=' ,$productId)->delete();
+        return back()->with('msg' , 'San pham da duoc xoa khoi danh muc yeu thich');
     }
 }
