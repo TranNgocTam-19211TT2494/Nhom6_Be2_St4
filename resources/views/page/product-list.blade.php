@@ -27,10 +27,12 @@
                                     </div>
                                     <ul class="product__item__pic__hover">
                                         @php
+                                        $count=0;
+                                        @endphp
+                                        @if(Auth::user())
                                         $count = App\Models\Wishlist::where(['product_id' =>
                                         $product->id,'user_id'=>Auth::user()->id])->count();
-
-                                        @endphp
+                                        @endif
                                         @if($count == "0")
                                         <li>
                                             <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>

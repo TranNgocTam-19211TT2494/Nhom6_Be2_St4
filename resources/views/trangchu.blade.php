@@ -1,5 +1,12 @@
 @extends('layouts.master')
 @section('content')
+@php
+$count=0;
+@endphp
+@if(Auth::user())
+$count = App\Models\Wishlist::where(['product_id' =>
+$product->id,'user_id'=>Auth::user()->id])->count();
+@endif
 <!-- Categories Section Begin -->
 <section class="categories">
     <div class="container">
@@ -79,8 +86,13 @@
                 echo $image[0];
                 @endphp">
                         <ul class="featured__item__pic__hover">
-                            <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li> -->
+                            @if($count == "0")
+                            <li>
+                                <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
+                            </li>
+                            @else
+                            <li><a href="{{route('wishlist.remove',$product->id)}}" style="background: red;"><i class="fa fa-heart"></i></a></li>
+                            @endif
                             <li><a href="{{route('cart.add',$product->slug)}}"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
@@ -101,8 +113,13 @@
                 echo $image[0];
                 @endphp">
                         <ul class="featured__item__pic__hover">
-                            <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li> -->
+                            @if($count == "0")
+                            <li>
+                                <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
+                            </li>
+                            @else
+                            <li><a href="{{route('wishlist.remove',$product->id)}}" style="background: red;"><i class="fa fa-heart"></i></a></li>
+                            @endif
                             <li><a href="{{route('cart.add',$product->slug)}}"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
@@ -123,8 +140,13 @@
                 echo $image[0];
                 @endphp">
                         <ul class="featured__item__pic__hover">
-                            <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li> -->
+                            @if($count == "0")
+                            <li>
+                                <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
+                            </li>
+                            @else
+                            <li><a href="{{route('wishlist.remove',$product->id)}}" style="background: red;"><i class="fa fa-heart"></i></a></li>
+                            @endif
                             <li><a href="{{route('cart.add',$product->slug)}}"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
@@ -145,8 +167,13 @@
                 echo $image[0];
                 @endphp">
                         <ul class="featured__item__pic__hover">
-                            <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li> -->
+                            @if($count == "0")
+                            <li>
+                                <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
+                            </li>
+                            @else
+                            <li><a href="{{route('wishlist.remove',$product->id)}}" style="background: red;"><i class="fa fa-heart"></i></a></li>
+                            @endif
                             <li><a href="{{route('cart.add',$product->slug)}}"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
