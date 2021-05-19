@@ -1,12 +1,5 @@
 @extends('layouts.master')
 @section('content')
-@php
-$count=0;
-@endphp
-@if(Auth::user())
-$count = App\Models\Wishlist::where(['product_id' =>
-$product->id,'user_id'=>Auth::user()->id])->count();
-@endif
 <!-- Categories Section Begin -->
 <section class="categories">
     <div class="container">
@@ -86,6 +79,14 @@ $product->id,'user_id'=>Auth::user()->id])->count();
                 echo $image[0];
                 @endphp">
                         <ul class="featured__item__pic__hover">
+                            @php
+                            $count=0;
+                            if(Auth::user())
+                            {
+                            $count = App\Models\Wishlist::where(['product_id' =>
+                            $product->id,'user_id'=>Auth::user()->id])->count();
+                            }
+                            @endphp
                             @if($count == "0")
                             <li>
                                 <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
@@ -113,6 +114,14 @@ $product->id,'user_id'=>Auth::user()->id])->count();
                 echo $image[0];
                 @endphp">
                         <ul class="featured__item__pic__hover">
+                            @php
+                            $count=0;
+                            if(Auth::user())
+                            {
+                            $count = App\Models\Wishlist::where(['product_id' =>
+                            $product->id,'user_id'=>Auth::user()->id])->count();
+                            }
+                            @endphp
                             @if($count == "0")
                             <li>
                                 <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
@@ -140,6 +149,14 @@ $product->id,'user_id'=>Auth::user()->id])->count();
                 echo $image[0];
                 @endphp">
                         <ul class="featured__item__pic__hover">
+                            @php
+                            $count=0;
+                            if(Auth::user())
+                            {
+                            $count = App\Models\Wishlist::where(['product_id' =>
+                            $product->id,'user_id'=>Auth::user()->id])->count();
+                            }
+                            @endphp
                             @if($count == "0")
                             <li>
                                 <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
@@ -167,6 +184,14 @@ $product->id,'user_id'=>Auth::user()->id])->count();
                 echo $image[0];
                 @endphp">
                         <ul class="featured__item__pic__hover">
+                            @php
+                            $count=0;
+                            if(Auth::user())
+                            {
+                            $count = App\Models\Wishlist::where(['product_id' =>
+                            $product->id,'user_id'=>Auth::user()->id])->count();
+                            }
+                            @endphp
                             @if($count == "0")
                             <li>
                                 <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
@@ -387,15 +412,13 @@ $product->id,'user_id'=>Auth::user()->id])->count();
             <div class="col-lg-4 col-md-4 col-sm-6">
                 <div class="blog__item">
                     <div class="blog__item__pic">
-                        <img src="{{$post->photo}}" alt="{{$post->title}}">
+                        <img src="{{$post->photo}}" alt="">
                     </div>
                     <div class="blog__item__text">
-                        <ul>
-                            <li><i class="fa fa-calendar-o"></i> {{$post->created_at->format('F d, Y')}}</li>
-                            <li><i class="fa fa-comment-o"></i> 5</li>
-                        </ul>
                         <h5><a href="{{route('blog.detail',$post->slug)}}">{{$post->title}}</a></h5>
-                        <p>{!!substr_replace($post->description,'...',100,-1)!!}</p>
+                        <p>
+                        {{substr_replace($post->description,'...',100,-1)}}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -407,6 +430,7 @@ $product->id,'user_id'=>Auth::user()->id])->count();
 </section>
 <!-- Blog Section End -->
 @endsection
+
 @section('banner')
 @if(isset($mainBanner))
 <div class="hero__item set-bg" data-setbg="{{$mainBanner->photo}}">

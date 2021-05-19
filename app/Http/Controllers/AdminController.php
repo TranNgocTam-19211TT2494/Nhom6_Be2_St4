@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use App\Rules\MatchOldPassword;
+use App\Models\Setting;
 
 class AdminController extends Controller
 {
@@ -50,5 +51,35 @@ class AdminController extends Controller
         User::find(auth()->user()->id)->update(['password' => Hash::make($request->new_password)]);
 
         return redirect()->route('admin')->with('success', 'Password successfully changed');
+    }
+    //Setting admin
+    public function settings(){
+        $data=Setting::first();
+        return view('backend.setting')->with('data',$data);
+    }
+
+    public function settingsUpdate(Request $request){
+        // return $request->all();
+        $this->validate($request,[
+            'title'=>'required|string',
+            'message'=>'required|string',
+            'description'=>'required|string',
+            'logo'=>'required',
+            'address'=>'required|string',
+            'email'=>'required|email',
+            'phone'=>'required|string',
+        ]);
+        $data=$request->all();
+        // return $data;
+        $settings=Setting::first();
+        // return $settings;
+        $status=$settings->fill($data)->save();
+        if($status){
+            request()->session()->flash('success','Setting successfully updated');
+        }
+        else{
+            request()->session()->flash('error','Please try again');
+        }
+        return redirect()->route('setting');
     }
 }

@@ -34,7 +34,7 @@
                 <div class="breadcrumb__text">
                     <h2>Caterogy Blog</h2>
                     <div class="breadcrumb__option">
-                        <a href="./index.html">Home</a>
+                        <a href="{{route('index')}}">Home</a>
                         <span>Blog</span>
                     </div>
                 </div>

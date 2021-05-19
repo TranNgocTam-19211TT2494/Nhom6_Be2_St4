@@ -79,7 +79,7 @@
           <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
           Change Password
         </a>
-        <a class="dropdown-item" href="">
+        <a class="dropdown-item" href="{{route('setting')}}">
           <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
           Settings
         </a>

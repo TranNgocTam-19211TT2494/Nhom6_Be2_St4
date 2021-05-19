@@ -28,11 +28,15 @@
                                     <ul class="product__item__pic__hover">
                                         @php
                                         $count=0;
-                                        @endphp
-                                        @if(Auth::user())
+                                        if(Auth::user())
+                                        {
                                         $count = App\Models\Wishlist::where(['product_id' =>
                                         $product->id,'user_id'=>Auth::user()->id])->count();
-                                        @endif
+                                        }
+                                        @endphp
+
+
+
                                         @if($count == "0")
                                         <li>
                                             <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
@@ -100,15 +104,15 @@
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="product__item">
                         <div class="product__item__pic set-bg" data-setbg="{{$photo[0]}}">
+                            @php
+                            $count=0;
+                            if(Auth::user())
+                            {
+                            $count = App\Models\Wishlist::where(['product_id' =>
+                            $product->id,'user_id'=>Auth::user()->id])->count();
+                            }
+                            @endphp
                             <ul class="product__item__pic__hover">
-                                @php
-                                $count=0;
-                                @endphp
-                                @if(Auth::user())
-                                $count = App\Models\Wishlist::where(['product_id' =>
-                                $product->id,'user_id'=>Auth::user()->id])->count();
-                                @endif
-
 
                                 @if($count == 0)
                                 <li>

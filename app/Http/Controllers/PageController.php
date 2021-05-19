@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\PostComment;
 
 
 class PageController extends Controller
@@ -32,7 +33,7 @@ class PageController extends Controller
         $cate2 = Category::with('products')->where('id', 2)->first();
         $cate3 = Category::with('products')->where('id', 3)->first();
         $cate4 = Category::with('products')->where('id', 4)->first();
-        $categories=Category::all();
+        $categories = Category::all();
         //banner
         $banner = Banner::where('status', 'active')->first();
         //banner inactive
@@ -46,7 +47,7 @@ class PageController extends Controller
             ->with('posts', $posts)
             ->with('mainBanner', $banner)
             ->with('subBanner', $bannerinactive)
-            ->with('categories',$categories);
+            ->with('categories', $categories);
     }
     //Trang login của user
     public function userLogin()
@@ -148,9 +149,10 @@ class PageController extends Controller
     {
         $post_interest = Post::orderBy('id', 'ASC')->limit(3)->get();
         $random_post = Post::all()->random(3);
+        $comment = PostComment::orderBy('created_at', 'DESC')->get();
         $post = Post::with('cat_info')->with('author_info')->with('tag_info')->where('slug', $slug)->first();
         $post_categories = PostCategory::all();
-        return view('page.blog-detail', ['post' => $post, 'post_categories' => $post_categories, 'random_post' => $random_post, 'post_interest' => $post_interest]);
+        return view('page.blog-detail', ['post' => $post, 'post_categories' => $post_categories, 'random_post' => $random_post, 'post_interest' => $post_interest, 'comment' => $comment]);
     }
     //Blog tìm kiếm
     public function blogSearch(Request $request)
@@ -221,8 +223,9 @@ class PageController extends Controller
             ->with('categories', $categories);
     }
     //Wishlist
-    public function addWishList($productId){
-        
+    public function addWishList($productId)
+    {
+
         $wishList = new Wishlist;
         $wishList->user_id = Auth::user()->id;
         $wishList->product_id = $productId;
@@ -230,19 +233,21 @@ class PageController extends Controller
         return back();
     }
 
-    public function showWishList(){
+    public function showWishList()
+    {
         $products = DB::table('wishlists')
-        ->leftJoin('products', 'wishlists.product_id' , '=' , 'products.id')
-        ->join('users','users.id','=','wishlists.user_id')
-        ->selectRaw('users.id as id_user, users.name as name_user, products.*, wishlists.id as id_wishlist')
-        ->where('user_id',Auth::user()->id)
-      //   ->orderBy('id','DESC')->paginate(6)
-        ->get();
-        return view('page.Wishlist' , compact('products'));
+            ->leftJoin('products', 'wishlists.product_id', '=', 'products.id')
+            ->join('users', 'users.id', '=', 'wishlists.user_id')
+            ->selectRaw('users.id as id_user, users.name as name_user, products.*, wishlists.id as id_wishlist')
+            ->where('user_id', Auth::user()->id)
+            //   ->orderBy('id','DESC')->paginate(6)
+            ->get();
+        return view('page.Wishlist', compact('products'));
     }
-    public function removeWishList($productId){
+    public function removeWishList($productId)
+    {
         //echo  $id;
-        DB::table('wishlists')->where('product_id', '=' ,$productId)->delete();
-        return back()->with('msg' , 'San pham da duoc xoa khoi danh muc yeu thich');
+        DB::table('wishlists')->where('product_id', '=', $productId)->delete();
+        return back()->with('msg', 'San pham da duoc xoa khoi danh muc yeu thich');
     }
 }

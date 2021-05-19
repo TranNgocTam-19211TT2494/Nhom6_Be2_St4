@@ -83,8 +83,8 @@
                     <div class="product__details__price">{{number_format($products->price)}} VNĐ</div>
                     <p>{!!$products->description!!}</p>
                     <!-- Add cart -->
-                    <form action="#" method="get">
-
+                    <form action="{{route('cart.add',$products->slug)}}" method="get">
+                        @csrf
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">

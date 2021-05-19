@@ -53,7 +53,7 @@ Route::get('product/search/key', 'PageController@productSearch')->name('product.
 //End - PageController
 
 //Trang danh sách yêu thích
-Route::get('wishlist/', 'PageController@showWishList')->name('wishlist.show')->middleware('checkLogin');
+Route::get('wishlist', 'PageController@showWishList')->name('wishlist')->middleware('checkLogin');
 Route::get('wishlist/add/{productId}', 'PageController@addWishList')->name('wishlist.add')->middleware('checkLogin');
 Route::get('wishlist/remove/{productId}', 'PageController@removeWishList')->name('wishlist.remove');
 
@@ -64,7 +64,8 @@ Route::get('order/pdf/{id}', 'OrderController@pdfGenerate')->name('order.pdf')->
 Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], function () {
     Lfm::routes();
 });
-
+//comment
+Route::resource('comment', 'PostCommentController');
 
 // Backend (ADMIN) section start
 Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'checkRole:admin,mod,writer']], function () {
@@ -97,6 +98,9 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'checkRole:admin,mo
     Route::post('/profile/{id}', 'UserController@profileUpdate')->name('admin.profile.update');
     Route::get('/changepassword', 'PageController@changePassword')->name('admin.change.password');
     Route::post('/changepassword/save', 'UserController@changPasswordStore')->name('admin.changepass.save');
+     // Settings
+     Route::get('setting','AdminController@settings')->name('setting')->middleware('checkRole:admin');
+     Route::post('setting/update','AdminController@settingsUpdate')->name('setting.update');
 });
 // End backend section
 
@@ -127,4 +131,3 @@ Route::group(['prefix' => '/user'], function () {
 });
 
 // End user secsion
-

@@ -154,7 +154,7 @@
 
   <!-- Comments -->
   <li class="nav-item">
-    <a class="nav-link" href="{{---route('comment.index')---}}">
+    <a class="nav-link" href="{{route('comment.index')}}">
       <i class="fas fa-comments fa-chart-area"></i>
       <span>Comments</span>
     </a>
@@ -177,6 +177,13 @@
     <a class="nav-link" href="{{route('users.index')}}">
       <i class="fas fa-users"></i>
       <span>Users</span></a>
+  </li>
+
+<!-- Settings -->
+  <li class="nav-item">
+    <a class="nav-link" href="{{route('setting')}}">
+      <i class="fas fa-cogs"></i>
+      <span>Settings</span></a>
   </li>
   <!-- Sidebar Toggler (Sidebar) -->
   <div class="text-center d-none d-md-inline">
