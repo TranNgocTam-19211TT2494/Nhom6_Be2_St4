@@ -11,12 +11,12 @@
     <div class="sidebar__item">
         <h4>Price</h4>
         <div class="price-range-wrap">
-            <div class="price-range" data-min="75" data-max="350">
+            <div class="price-range" data-min="0" data-max="1000000" id="price-range">
             </div>
             <div class="range-slider">
                 <div class="price-input">
-                    <input size="10" type="text" id="minamount" name="start_price" readonly="readonly" value="75.000">
-                    <input size="10" type="text" id="maxamount" name="end_price" readonly="readonly" value="350.000">
+                    <input size="10" type="text" id="minamount" name="start_price" readonly="readonly" value="0">
+                    <input size="10" type="text" id="maxamount" name="end_price" readonly="readonly" value="50000">
 
                 </div>
 
@@ -108,7 +108,7 @@
                             </div>
                         </a>
                     </div>
-                    
+
                     @endif
 
                     @endforeach
@@ -117,3 +117,28 @@
 
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        $("#price-range").click(function(event) {
+            event.preventDefault();
+
+            let min = $("input[name=start_price]").val();
+            let max = $("input[name=end_price]").val();
+            let _token = $('meta[name="csrf-token"]').attr('content');
+            console.log(min);
+            $.ajax({
+                url: "{{route('sort.price')}}",
+                type: "POST",
+                data: {
+                    minamount: min,
+                    maxamount: max,
+                    _token: _token
+                },
+                success: function(response) {
+                    console.log(response);
+                },
+            });
+        });
+    </script>
+    @endpush

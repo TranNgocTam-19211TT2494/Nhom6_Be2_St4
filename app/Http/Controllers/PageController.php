@@ -19,6 +19,7 @@ use App\Models\Wishlist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\PostComment;
+use App\Models\Contact;
 
 
 class PageController extends Controller
@@ -249,5 +250,39 @@ class PageController extends Controller
         //echo  $id;
         DB::table('wishlists')->where('product_id', '=', $productId)->delete();
         return back()->with('msg', 'San pham da duoc xoa khoi danh muc yeu thich');
+    }
+    //sort by price
+    public function sortByPrice(Request $request)
+    {
+        $min = $request->minamount;
+        $max = $request->maxamount;
+        $min = str_replace('$', '', $min);
+        $max = str_replace('$', '', $max);
+        $products = Product::where('price', '>=', $min)->where('price', '<=', $max)->get();
+        dd($products);
+        return response()->json(['success' => $products]);
+    }
+    //Trang liên hệ 
+    public function contact()
+    {
+        return view('page.contact');
+    }
+    //Lưu liên hệ: 
+    public function saveContact(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'string|required',
+            'email' => 'string|required',
+            'message' => 'string|nullable',
+        ]);
+        $data = $request->all();
+        // Thêm cái thời gian:
+        $status = Contact::create($data);
+        if ($status) {
+            request()->session()->flash('success', 'Saved contact successfully');
+        } else {
+            request()->session()->flash('error', 'Save contact unsuccessfully');
+        }
+        return redirect()->route('index');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Contact;
 use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,7 @@ Auth::routes();
 Route::get('/', 'PageController@index')->name('index');
 //Trang contact
 Route::get('/contact', 'PageController@contact')->name('contact');
+Route::post('/contact/save', 'PageController@saveContact')->name('contact.save');
 //Cart
 Route::get('cart', 'PageController@cart')->name('cart')->middleware('checkLogin');
 Route::get('cart/add/{slug}', 'CartController@addToCart')->name('cart.add')->middleware('checkLogin');
@@ -98,9 +100,9 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'checkRole:admin,mo
     Route::post('/profile/{id}', 'UserController@profileUpdate')->name('admin.profile.update');
     Route::get('/changepassword', 'PageController@changePassword')->name('admin.change.password');
     Route::post('/changepassword/save', 'UserController@changPasswordStore')->name('admin.changepass.save');
-     // Settings
-     Route::get('setting','AdminController@settings')->name('setting')->middleware('checkRole:admin');
-     Route::post('setting/update','AdminController@settingsUpdate')->name('setting.update');
+    // Settings
+    Route::get('setting', 'AdminController@settings')->name('setting')->middleware('checkRole:admin');
+    Route::post('setting/update', 'AdminController@settingsUpdate')->name('setting.update');
 });
 // End backend section
 
@@ -131,3 +133,5 @@ Route::group(['prefix' => '/user'], function () {
 });
 
 // End user secsion
+
+Route::post('sort', 'PageController@sortByPrice')->name('sort.price');
