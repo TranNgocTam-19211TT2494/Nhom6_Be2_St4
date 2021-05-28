@@ -1,3 +1,6 @@
+@php
+$site=DB::table('settings')->first();
+@endphp
 <!DOCTYPE html>
 <html>
 
@@ -87,10 +90,10 @@
   @if($order)
   <div class="invoice-header">
     <div class="float-right site-address">
-      <h4>OGANI SHOP</h4>
-      <p>53 Vo Van Ngan</p>
-      <p>Phone: <a href="tel:0331475012">0331475012</a></p>
-      <p>Email: <a href="mailto:hovietlong234@gmail.com">hovietlong234@gmail.com</a></p>
+      <h4>{{$site->title}}</h4>
+      <p>{{$site->address}}</p>
+      <p>Phone: <a href="tel:{{$site->phone}}">{{$site->phone}}</a></p>
+      <p>Email: <a href="mailto:{{$site->email}}">{{$site->email}}</a></p>
     </div>
     <div class="clearfix"></div>
   </div>
@@ -149,20 +152,20 @@
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right">Subtotal:</th>
-          <th scope="col"> <span>${{number_format($order->sub_total,2)}}</span></th>
+          <th scope="col"> <span>${{number_format($order->sub_total)}}</span></th>
         </tr>
-        {{-- @if(!empty($order->coupon))
+        @if(!empty($order->coupon))
         <tr>
           <th scope="col" class="empty"></th>
           <th scope="col" class="text-right">Discount:</th>
-          <th scope="col"><span>-{{$order->coupon->discount(Helper::orderPrice($order->id, $order->user->id))}}{{Helper::base_currency()}}</span></th>
+          <th scope="col"><span>-{{$order->coupon}}</span></th>
         </tr>
-        @endif --}}
+        @endif
         <tr>
           <th scope="col" class="empty"></th>
 
           <th scope="col" class="text-right ">Shipping:</th>
-          <th><span>123</span></th>
+          <th><span>{{$order->shipping}}</span></th>
         </tr>
         <tr>
           <th scope="col" class="empty"></th>

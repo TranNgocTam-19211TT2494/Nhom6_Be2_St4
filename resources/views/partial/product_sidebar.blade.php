@@ -3,7 +3,10 @@
         <h4>Department</h4>
         <ul>
             @foreach ($categories as $category)
-            <li><a href="{{route('product.category',$category->id)}}">{{$category->title}}</a>
+            @php
+            $countCategories=DB::table('products')->where('cat_id',$category->id)->count();
+            @endphp
+            <li><a href="{{route('product.category',$category->id)}}">{{$category->title}} ({{$countCategories}})</a>
             </li>
             @endforeach
         </ul>
@@ -11,15 +14,13 @@
     <div class="sidebar__item">
         <h4>Price</h4>
         <div class="price-range-wrap">
-            <div class="price-range" data-min="0" data-max="1000000" id="price-range">
+            <div class="price-range" data-min="0" data-max="0">
             </div>
             <div class="range-slider">
                 <div class="price-input">
-                    <input size="10" type="text" id="minamount" name="start_price" readonly="readonly" value="0">
-                    <input size="10" type="text" id="maxamount" name="end_price" readonly="readonly" value="50000">
-
+                    <input type="text" id="minamount" name="start_price" readonly="readonly">
+                    <input type="text" id="maxamount" name="end_price" readonly="readonly">
                 </div>
-
             </div>
         </div>
 
@@ -118,27 +119,58 @@
         </div>
     </div>
 
-    @push('scripts')
-    <script>
-        $("#price-range").click(function(event) {
-            event.preventDefault();
+    @push('styles')
+    <style>
+        .price-range span {
+            left: 100%;
+        }
 
-            let min = $("input[name=start_price]").val();
-            let max = $("input[name=end_price]").val();
-            let _token = $('meta[name="csrf-token"]').attr('content');
-            console.log(min);
-            $.ajax({
-                url: "{{route('sort.price')}}",
-                type: "POST",
-                data: {
-                    minamount: min,
-                    maxamount: max,
-                    _token: _token
-                },
-                success: function(response) {
-                    console.log(response);
-                },
+        .price-range-wrap .range-slider .price-input input {
+            font-size: 16px;
+            color: #dd2222;
+            font-weight: 700;
+            max-width: 30%;
+            border: none;
+            display: inline-block;
+        }
+    </style>
+    @endpush
+    @push('scripts')
+    <!-- Script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $(".price-range").slider({
+                range: true,
+                min: 0,
+                max: 1500000,
+                values: [75000, 1400000],
+
+                slide: function(event, ui) {
+
+                    $("#minamount").val(ui.values[0]);
+                    $("#maxamount").val(ui.values[1]);
+                    var start = $('#minamount').val();
+
+                    var end = $('#maxamount').val();
+                    $.ajax({
+                        type: 'get',
+                        url: '',
+                        data: "start=" + start + "&end=" + end,
+
+                        success: function(response) {
+                            console.log(response);
+                            $('#updateDiv').html(response);
+                            //Xóa style khi loading thanh range price không bị đẩy css:
+                            $('#updateDiv').removeAttr('style');
+                        }
+
+                    });
+                }
             });
         });
     </script>
+
     @endpush

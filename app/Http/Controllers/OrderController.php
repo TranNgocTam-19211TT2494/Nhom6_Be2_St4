@@ -52,6 +52,7 @@ class OrderController extends Controller
             'email' => 'string|required',
             'total' => 'integer|required',
             'sub_total' => 'integer|required',
+            'shipping' => 'numeric|required',
         ]);
         // return $request->all();
 

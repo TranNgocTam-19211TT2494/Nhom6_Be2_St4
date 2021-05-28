@@ -35,6 +35,7 @@ Route::post('/coupon/apply', 'CouponController@couponApply')->name('coupon.apply
 
 //Checkout
 Route::get('checkout', 'PageController@checkout')->name('checkout')->middleware('checkLogin');
+
 //Place order
 Route::post('place-order', 'OrderController@store')->name('order.store')->middleware('checkLogin');
 
@@ -47,7 +48,7 @@ Route::get('blog/search/key', 'PageController@blogSearch')->name('blog.search');
 
 
 //--- Begin Shop ---
-Route::get('product', 'PageController@ShowProduct')->name('product.all');
+
 Route::get('product/{slug}', 'PageController@getProductBySlug')->name('product.detail');
 Route::get('product/{id}', 'PageController@getCategogyBySlug');
 Route::get('product/category/{id}', 'PageController@getCategogyProductById')->name('product.category');
@@ -69,16 +70,17 @@ Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], funct
 //comment
 Route::resource('comment', 'PostCommentController');
 
+//Update profile
+Route::post('/profile/{id}', 'UserController@profileUpdate')->name('admin.profile.update');
+
 // Backend (ADMIN) section start
-Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'checkRole:admin,mod,writer']], function () {
+Route::group(['prefix' => '/admin', 'middleware' => ['auth']], function () {
     //Category
     Route::resource('category', 'CategoryController')->middleware('checkRole:admin,mod');
     //Product
     Route::resource('product', 'ProductController')->middleware('checkRole:admin,mod');
     //Coupon
     Route::resource('coupon', 'CouponController')->middleware('checkRole:admin,mod');
-    //Order
-    Route::resource('order', 'OrderController')->middleware('checkRole:admin,mod');
     //Product Rating
     Route::resource('rate', 'ProductReviewController')->middleware('checkRole:admin,mod');
     //Banner
@@ -90,14 +92,15 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'checkRole:admin,mo
     //Users
     Route::resource('users', 'UserController')->middleware('checkRole:admin');
     //User profile
-    Route::get('profile', 'AdminController@profile')->name('profile');
+    Route::get('profile', 'AdminController@profile')->name('admin.profile');
     //Admin
     Route::get('/', 'AdminController@index')->name('admin');
+    //Order
+Route::resource('order', 'OrderController')->middleware('checkLogin');
     //Post Caterogy :
     Route::resource('blogcategory', 'PostCategoryController')->middleware('checkRole:admin,mod,writer');
-    //admin profile
-    Route::get('profile/', 'PageController@adminProfile')->name('admin.profile');
-    Route::post('/profile/{id}', 'UserController@profileUpdate')->name('admin.profile.update');
+    // //admin profile
+    // Route::get('profile', 'PageController@adminProfile')->name('admin.profile');
     Route::get('/changepassword', 'PageController@changePassword')->name('admin.change.password');
     Route::post('/changepassword/save', 'UserController@changPasswordStore')->name('admin.changepass.save');
     // Settings
@@ -135,3 +138,11 @@ Route::group(['prefix' => '/user'], function () {
 // End user secsion
 
 Route::post('sort', 'PageController@sortByPrice')->name('sort.price');
+//  -- Lọc giá và sắp xếp danh sách sản phẩm-- 
+Route::get('product', 'PageController@shop')->name('product.all');
+Route::get('products', 'PageController@shop');
+//  -- End Lọc giá và sắp xếp -- 
+//Page Rate
+Route::post('rate', 'ProductReviewController@store')->name('rate.add')->middleware('checkLogin');
+
+Route::get('test','ProductController@AutoDiscount');

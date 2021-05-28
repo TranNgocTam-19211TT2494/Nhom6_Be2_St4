@@ -17,7 +17,7 @@
       </div>
 
       <div class="form-group">
-        <label for="message" class="col-form-label">Title <span class="text-danger">*</span></label>
+        <label for="message" class="col-form-label">Message <span class="text-danger">*</span></label>
         <textarea class="form-control" id="message" name="message">{{$data->message}}</textarea>
         @error('message')
         <span class="text-danger">{{$message}}</span>

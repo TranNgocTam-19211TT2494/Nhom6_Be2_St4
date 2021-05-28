@@ -101,7 +101,7 @@
                             <div class="checkout__order__subtotal">Subtotal <span>{{number_format($cart->sum('amount'))}}</span></div>
                             <input type="hidden" name="sub_total" value="{{$cart->sum('amount')}}">
                             @php
-                            if($weightSum >= 1000 || $cart->sum('amount') >= 1000000)
+                            if($weightSum >= 2000 || $cart->sum('amount') >= 1000000)
                             {
                             $shippingFee = 0;
                             }else{
@@ -109,6 +109,7 @@
                             }
                             @endphp
                             <div class="checkout__order__total">Shipping Fee <span>{{$shippingFee}}</span></div>
+                            <input type="hidden" name="shipping" value="{{$shippingFee}}">
                             @if(session()->has('coupon'))
                             <div class="checkout__order__total">Copoun <span>{{number_format(Session::get('coupon')['value'])}}</span></div>
                             <input type="hidden" name="coupon" value="{{Session::get('coupon')['value']}}">

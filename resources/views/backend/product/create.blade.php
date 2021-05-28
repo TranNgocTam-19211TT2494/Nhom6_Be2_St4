@@ -96,6 +96,16 @@
         <span class="text-danger">{{$message}}</span>
         @enderror
       </div>
+
+      <div class="form-group">
+        <label for="expiry">Expired date <span class="text-danger">*</span></label>
+        <input id="expiry" type="number" name="expiry" min="0" placeholder="Enter expiry" value="{{old('expiry')}}" class="form-control">
+        @error('expiry')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+      </div>
+
+
       <div class="form-group">
         <label for="inputPhoto" class="col-form-label">Photo <span class="text-danger">*</span></label>
         <div class="input-group">

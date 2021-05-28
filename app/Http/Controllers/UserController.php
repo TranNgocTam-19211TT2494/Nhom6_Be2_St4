@@ -52,10 +52,9 @@ class UserController extends Controller
                 'password' => 'string|required',
                 'role' => 'required|in:admin,user,mod,writter',
                 'status' => 'required|in:active,inactive',
-                'photo' => 'nullable|string',
+                'photo' => 'string|nullable',
             ]
         );
-        // dd($request->all());
         $data = $request->all();
         $data['password'] = Hash::make($request->password);
         // dd($data);

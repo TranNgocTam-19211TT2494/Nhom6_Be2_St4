@@ -27,6 +27,7 @@ class CreateProductsTable extends Migration
             $table->integer('price');
             $table->integer('discount')->nullabale();
             $table->string('manufacturer')->nullable();
+            $table->integer('expiry');
             $table->boolean('is_featured')->deault(false);
             $table->unsignedBigInteger('cat_id')->nullable();
             $table->foreign('cat_id')->references('id')->on('categories')->onDelete('SET NULL');

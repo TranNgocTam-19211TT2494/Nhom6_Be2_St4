@@ -21,6 +21,7 @@ class CreateOrdersTable extends Migration
             $table->integer('coupon')->nullable();
             $table->integer('total_amount');
             $table->integer('quantity');
+            $table->integer('shipping');
             $table->enum('payment_method',['cod','paypal'])->default('cod');
             $table->enum('payment_status',['paid','unpaid'])->default('unpaid');
             $table->enum('status',['new','process','delivered','cancel'])->default('new');

@@ -178,7 +178,8 @@
                                     <div class="col-md-10">
                                         <div class="product__details__tab__desc">
                                             @if($arrayRatings)
-                                            <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;">Đánh giá Sản Phẩm {{$products->title}}</h6>
+                                            <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;">Đánh giá
+                                                Sản Phẩm {{$products->title}}</h6>
                                             <div class="toprt">
                                                 <div class="crt">
                                                     <div class="lcrt" data-gpa="{{$itemAge}}">
@@ -198,14 +199,17 @@
                                                             <div class="bgb">
                                                                 <div class="bgb-in" style="width: {{$itemAge}}%"></div>
                                                             </div>
-                                                            <span class="c" data-buy="{{$itemAge}}"><strong>{{$arrayRating['total']}}</strong> đánh giá ({{$itemAge}}%) </span>
+                                                            <span class="c" data-buy="{{$itemAge}}"><strong>{{$arrayRating['total']}}</strong>
+                                                                đánh giá ({{$itemAge}}%) </span>
                                                         </div>
                                                     </div>
                                                     @endforeach
                                                 </div>
                                             </div>
                                             @else
-                                            <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;">{{$products->title}} vẫn chưa có đánh giá nào!!</h6>
+                                            <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;">
+                                                {{$products->title}} vẫn chưa có đánh giá nào!!
+                                            </h6>
                                             @endif
                                         </div>
                                     </div>
@@ -224,7 +228,7 @@
                                         {{ session('status') }}
                                     </div>
                                     @endif
-                                    <form class="form" method="post" action="{{route('rate.store')}}">
+                                    <form class="form" method="post" action="{{route('rate.add')}}">
                                         @csrf
                                         <!-- {{ csrf_field() }} -->
                                         @if (Auth::check())
@@ -233,7 +237,6 @@
                                         <div class="row">
                                             <div class="col-lg-12 col-12">
                                                 <div class="rating_box">
-
                                                     <div class="star-rating">
                                                         @php
                                                         $listRatingStart = [
@@ -290,13 +293,39 @@
                                                     <label>Write a review</label>
                                                     <textarea name="review" rows="6" style="width: 100%;"></textarea>
                                                 </div>
+
                                             </div>
+                                            @php
+                                            $icheck = false;
+
+                                            $carts = DB::table('carts')->join('orders', 'orders.id',
+                                            '=', 'carts.order_id')->get();
+                                            foreach($carts as $item) {
+                                            if( $item->product_id == $products->id) {
+                                            $icheck = true;
+                                            }
+                                            }
+                                            @endphp
+                                            @if($icheck == true)
                                             @if(Auth::check())
+                                            @if(Auth::user()->id == $item->user_id && $icheck == true)
                                             <div class="col-lg-12 col-12">
                                                 <div class="form-group button5">
                                                     <button type="submit" class="site-btn">Submit</button>
                                                 </div>
                                             </div>
+
+                                            @else
+                                            <div class="col-lg-12 col-12">
+                                                <div class="form-group button5">
+                                                    <button type="submit" disabled class="site-btn" style="opacity: .5;">Submit</button>
+                                                </div>
+                                            </div>
+                                            @endif
+                                            @else
+                                            <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;margin-left: 20px;">
+                                                Mời quý khách đăng nhập tài khoản trước ạ!!</h6>
+                                            @endif
                                             @else
                                             <div class="col-lg-12 col-12">
                                                 <div class="form-group button5">
@@ -456,7 +485,6 @@
             listStart.removeClass('rating_active');
 
             $.each(listStart, function(key, value) {
-
                 if (key + 1 <= number) {
                     $(this).addClass('rating_active')
                 }

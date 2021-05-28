@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
+use DateTime;
+use DateInterval;
 
 class ProductController extends Controller
 {
@@ -55,7 +58,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'discount' => 'numeric',
             'manufacturer' => 'string|nullable',
-            
+            'expiry' => 'numeric',
         ]);
         // //Gán dữ liệu
         $data = $request->all();
@@ -132,6 +135,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'discount' => 'numeric',
             'manufacturer' => 'string|nullable',
+            'expiry' => 'numeric',
         ]);
         // //Gán dữ liệu
         $data = $request->all();
@@ -164,5 +168,23 @@ class ProductController extends Controller
             request()->session()->flash('error', 'Please try again!!');
         }
         return redirect()->route('product.index');
+    }
+    //Phương thức tự động giảm giá sản phẩm khi hạn sử dụng còn ít
+    public static function AutoDiscount()
+    {
+        $products = Product::get();
+        $dtNow = Carbon::now('Asia/Ho_Chi_Minh');
+        foreach ($products as $product) {
+            $ngayNhap = new DateTime(($product->created_at)->format("Y-m-d"));
+            $now = new DateTime($dtNow->format("Y-m-d"));
+            $interval = new DateInterval('P' . $product->expiry . 'D');
+            $handung = $ngayNhap->add($interval);
+            //$ex2=$dtNow->format("Y-m-d");
+            $expired = $handung->diff($now);
+            if ($expired->d <= 2) {
+                $product['discount'] = 50;
+                $product->save();
+            }
+        }
     }
 }

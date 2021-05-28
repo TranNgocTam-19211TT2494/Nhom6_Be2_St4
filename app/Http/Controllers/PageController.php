@@ -27,6 +27,7 @@ class PageController extends Controller
     //
     public function index()
     {
+        ProductController::AutoDiscount();
         $posts = Post::orderBy('id', 'DESC')->get()->take(3);
         $latestProducts = Product::orderBy('id', 'DESC')->get()->take(6);
         $hotProducts = Product::where('condition', 'hot')->orderBy('id', 'DESC')->get()->take(6);
@@ -87,7 +88,7 @@ class PageController extends Controller
         $check = $this->create($data);
         Session::put('user', $data['email']);
         if ($check) {
-            request()->session()->flash('success', 'Successfully registered');
+            request()->session()->flash('success', 'Successfully registered!Please confrfirm your email!');
             $userActivation = new UserActivation;
             $activation = new ActivationService($userActivation);
             $activation->sendActivationMail($check);
@@ -284,5 +285,32 @@ class PageController extends Controller
             request()->session()->flash('error', 'Save contact unsuccessfully');
         }
         return redirect()->route('index');
+    }
+    //Sort data by price
+    public function shop(Request $request)
+    {
+
+        if ($request->ajax() && isset($request->start) && isset($request->end)) {
+
+            $start = $request->start;
+            $end = $request->end;
+
+            $products = DB::table('products')
+                ->where('price', '>=', $start)
+                ->where('price', '<=', $end)
+                ->orderby('price', 'ASC')
+                ->paginate(9);
+            $categories = Category::all();
+            // dd($products);
+
+            response()->json(['success' => $products]);
+            return view('page.product', compact('products', 'categories'));
+        } else {
+            $categories = Category::all();
+            $products = DB::table('products')->paginate(9);
+
+            response()->json(['success' => $products]);
+            return view('page.product-list', compact('products', 'categories'));
+        }
     }
 }

@@ -7,6 +7,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-5">
                 @include('partial.product_sidebar')
+
             </div>
         </div>
 
@@ -39,7 +40,7 @@
                                             <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
                                         </li>
                                         @else
-                                        <li><a href="{{route('wishlist.remove',$product->id)}}" style="background: red;"><i class="fa fa-heart"></i></a></li>
+                                        <li><a href="{{route('wishlist.remove',$product->id)}}" style="border: 1px solid red;"><i class="fa fa-heart" style="color: red;"></i></a></li>
                                         @endif
                                         <li><a href="{{route('cart.add',$product->slug)}}"><i class="fa fa-shopping-cart"></i></a></li>
                                     </ul>
@@ -49,7 +50,7 @@
                                     </h5>
                                     <div class="product__item__price">
                                         @php
-                                        $after_discount=($product->price-($product->price*$product->discount)/100);
+                                        $after_discount=($product->price-($product->price*($product->discount/100)));
                                         @endphp
                                         {{number_format($product->price)}}đ<span>{{number_format($after_discount)}}đ</span>
                                     </div>
@@ -67,10 +68,16 @@
                         <div class="filter__sort">
                             <span>Sort By</span>
 
-                            <select name="select" id="cdb">
-                                <option value="0">Default</option>
-                                <option value="1">Hot</option>
-                                <option value="2">New</option>
+                            <select name="SortbyList" id="SortbyList">
+                                <option value="0" data-anh=".all">
+                                    Default
+                                </option>
+                                <option value="1" data-anh=".hot">
+                                    Hot
+                                </option>
+                                <option value="2" data-anh=".new">
+                                    New
+                                </option>
                             </select>
 
                         </div>
@@ -94,11 +101,17 @@
                     </div>
                 </div>
             </div>
+            <!-- Phần sortBy lỗi bootstrap ngay select : display: none; nên không thể chọn  -->
+            <!-- Bỏ thêm class content vào row -->
+            <div class="row" id="updateDiv">
 
-            <div class="row">
                 @foreach($products as $product)
                 @php $photo = explode(',',$product->photo); @endphp
-                <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="col-lg-4 col-md-6 col-sm-6 contentisotope <?php if ($product->condition == 'hot') {
+                                                                            echo " hot";
+                                                                        } else {
+                                                                            echo " new";
+                                                                        } ?>">
                     <div class="product__item">
                         <div class="product__item__pic set-bg" data-setbg="{{$photo[0]}}">
                             <ul class="product__item__pic__hover">
@@ -115,7 +128,7 @@
                                     <a href="{{route('wishlist.add',$product->id)}}"> <i class="fa fa-heart"></i></a>
                                 </li>
                                 @else
-                                <li><a href="{{route('wishlist.remove',$product->id)}}" style="background: red;"><i class="fa fa-heart"></i></a></li>
+                                <li><a href="{{route('wishlist.remove',$product->id)}}" style="border: 1px solid red;"><i class="fa fa-heart" style="color: red;"></i></a></li>
                                 @endif
                                 <li><a href="{{route('cart.add',$product->slug)}}"><i class="fa fa-shopping-cart"></i></a></li>
                             </ul>
@@ -139,6 +152,43 @@
 </section>
 <!-- Product Section End -->
 @endsection
+@push('scripts')
+<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+<!-- or -->
+<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+<!-- Isotope -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+<script>
+    $(function() {
+        // $('.row').isotope({
+        //     itemSelector: '.contentisotope',
+        // });
+        //ẩn div không select được đi:
+        $('.nice-select').hide();
+        //Xóa style:display:none; trong select;
+        $('#SortbyList').removeAttr('style');
+        //code cho nut
+        $('#SortbyList').change(function() {
+            var danhmuc = $('option:selected').attr('data-anh');
+            if (danhmuc == '.all') {
+                $('#updateDiv').isotope({
+                    filter: '*'
+
+                });
+            } else {
+                $('#updateDiv').isotope({
+                    filter: danhmuc
+
+                });
+                $('.filter__found').remove();
+            }
+            return false;
+
+        });
+
+    });
+</script>
+@endpush
 @push('styles')
 <style>
     button {

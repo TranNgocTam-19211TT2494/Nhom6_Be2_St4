@@ -11,8 +11,9 @@ use App\Models\Setting;
 class AdminController extends Controller
 {
     //
-    public function index(){
-        return view('backend.index');  
+    public function index()
+    {
+        return view('backend.index');
     }
     //User profile
     public function profile()
@@ -53,32 +54,35 @@ class AdminController extends Controller
         return redirect()->route('admin')->with('success', 'Password successfully changed');
     }
     //Setting admin
-    public function settings(){
-        $data=Setting::first();
-        return view('backend.setting')->with('data',$data);
+    public function settings()
+    {
+        $data = Setting::first();
+        return view('backend.setting')->with('data', $data);
     }
 
-    public function settingsUpdate(Request $request){
+    public function settingsUpdate(Request $request)
+    {
         // return $request->all();
-        $this->validate($request,[
-            'title'=>'required|string',
-            'message'=>'required|string',
-            'description'=>'required|string',
-            'logo'=>'required',
-            'address'=>'required|string',
-            'email'=>'required|email',
-            'phone'=>'required|string',
+        $this->validate($request, [
+            'title' => 'required|string',
+            'message' => 'required|string',
+            'description' => 'required|string',
+            'logo' => 'required',
+            'address' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required|string',
         ]);
-        $data=$request->all();
+        $data = $request->all();
         // return $data;
-        $settings=Setting::first();
+        $settings = Setting::first();
+        $settings['title'] = $data['title'];
+        $settings['message'] = $data['message'];
         // return $settings;
-        $status=$settings->fill($data)->save();
-        if($status){
-            request()->session()->flash('success','Setting successfully updated');
-        }
-        else{
-            request()->session()->flash('error','Please try again');
+        $status = $settings->fill($data)->save();
+        if ($status) {
+            request()->session()->flash('success', 'Setting successfully updated');
+        } else {
+            request()->session()->flash('error', 'Please try again');
         }
         return redirect()->route('setting');
     }
