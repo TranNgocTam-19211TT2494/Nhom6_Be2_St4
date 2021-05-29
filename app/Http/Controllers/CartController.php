@@ -99,7 +99,7 @@ class CartController extends Controller
                     $cart->save();
                 }
             }
-            return back()->with('error', 'Cart Invalid!')->with('success', 'Cart successfully updated!');
+            return back()->with('success', 'Cart successfully updated!');
         } else {
             return back()->with('Cart Invalid!');
         }

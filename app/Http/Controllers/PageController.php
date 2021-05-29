@@ -29,8 +29,9 @@ class PageController extends Controller
     {
         ProductController::AutoDiscount();
         $posts = Post::orderBy('id', 'DESC')->get()->take(3);
-        $latestProducts = Product::orderBy('id', 'DESC')->get()->take(6);
+        $latestProducts = Product::where('condition', 'new')->orderBy('id', 'DESC')->get()->take(6);
         $hotProducts = Product::where('condition', 'hot')->orderBy('id', 'DESC')->get()->take(6);
+        $reviewProducts = Product::with('review')->get()->take(6);
         $cate1 = Category::with('products')->where('id', 1)->first();
         $cate2 = Category::with('products')->where('id', 2)->first();
         $cate3 = Category::with('products')->where('id', 3)->first();
@@ -49,7 +50,8 @@ class PageController extends Controller
             ->with('posts', $posts)
             ->with('mainBanner', $banner)
             ->with('subBanner', $bannerinactive)
-            ->with('categories', $categories);
+            ->with('categories', $categories)
+            ->with('reviewProducts', $reviewProducts);
     }
     //Trang login của user
     public function userLogin()
@@ -86,6 +88,9 @@ class PageController extends Controller
         $data = $request->all();
         // dd($data);
         $check = $this->create($data);
+        $check['status'] = 'inactive';
+        $check->save();
+        // dd($check);
         Session::put('user', $data['email']);
         if ($check) {
             request()->session()->flash('success', 'Successfully registered!Please confrfirm your email!');

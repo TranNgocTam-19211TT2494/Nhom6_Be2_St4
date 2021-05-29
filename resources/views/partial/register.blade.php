@@ -23,7 +23,7 @@
                     <h2>Register</h2>
                     <p>Please register in order to checkout more quickly</p>
                     <!-- Form -->
-                    <form class="form" method="post" action="{{route('user.register')}}">
+                    <form class="form" method="post" action="{{route('user.register.submit')}}">
                         @csrf
                         <div class="row">
                             <div class="col-12">

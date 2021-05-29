@@ -192,6 +192,7 @@ class UserController extends Controller
         $userActivation = new UserActivation;
         $active = new ActivationService($userActivation);
         $active->activateUser($token);
+        request()->session()->flash('success', 'Successfully active user. Please login');
         return redirect()->route('index');
     }
     //User order index

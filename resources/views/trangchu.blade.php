@@ -329,69 +329,29 @@
     <div class="col-lg-4 col-md-6">
         <div class="latest-product__text">
             <h4>Review Products</h4>
+            @isset($reviewProducts)
             <div class="latest-product__slider owl-carousel">
                 <div class="latest-prdouct__slider__item">
-                    <a href="#" class="latest-product__item">
+                    @foreach ($reviewProducts as $product)
+                    @if (count($product->review)>0)
+                    <a href="{{route('product.detail',$product->slug)}}" class="latest-product__item">
                         <div class="latest-product__item__pic">
-                            <img src="img/latest-product/lp-1.jpg" alt="">
+                            <img src="@php
+                $image=explode(',',$product->photo);
+                echo $image[0];
+                @endphp" alt="{{$product->title}}">
                         </div>
                         <div class="latest-product__item__text">
-                            <h6>Crab Pool Security</h6>
-                            <span>$30.00</span>
+                            <h6>{{$product->title}}</h6>
+                            <span>{{number_format($product->title)}}</span>
                         </div>
                     </a>
-                    <a href="#" class="latest-product__item">
-                        <div class="latest-product__item__pic">
-                            <img src="img/latest-product/lp-2.jpg" alt="">
-                        </div>
-                        <div class="latest-product__item__text">
-                            <h6>Crab Pool Security</h6>
-                            <span>$30.00</span>
-                        </div>
-                    </a>
-                    <a href="#" class="latest-product__item">
-                        <div class="latest-product__item__pic">
-                            <img src="img/latest-product/lp-3.jpg" alt="">
-                        </div>
-                        <div class="latest-product__item__text">
-                            <h6>Crab Pool Security</h6>
-                            <span>$30.00</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="latest-prdouct__slider__item">
-                    <a href="#" class="latest-product__item">
-                        <div class="latest-product__item__pic">
-                            <img src="img/latest-product/lp-1.jpg" alt="">
-                        </div>
-                        <div class="latest-product__item__text">
-                            <h6>Crab Pool Security</h6>
-                            <span>$30.00</span>
-                        </div>
-                    </a>
-                    <a href="#" class="latest-product__item">
-                        <div class="latest-product__item__pic">
-                            <img src="img/latest-product/lp-2.jpg" alt="">
-                        </div>
-                        <div class="latest-product__item__text">
-                            <h6>Crab Pool Security</h6>
-                            <span>$30.00</span>
-                        </div>
-                    </a>
-                    <a href="#" class="latest-product__item">
-                        <div class="latest-product__item__pic">
-                            <img src="img/latest-product/lp-3.jpg" alt="">
-                        </div>
-                        <div class="latest-product__item__text">
-                            <h6>Crab Pool Security</h6>
-                            <span>$30.00</span>
-                        </div>
-                    </a>
+                    @endif
+                    @endforeach
                 </div>
             </div>
+            @endisset
         </div>
-    </div>
-    </div>
     </div>
 </section>
 <!-- Latest Product Section End -->
@@ -417,7 +377,7 @@
                     <div class="blog__item__text">
                         <h5><a href="{{route('blog.detail',$post->slug)}}">{{$post->title}}</a></h5>
                         <p>
-                        {{substr_replace($post->description,'...',100,-1)}}
+                            {{substr_replace($post->description,'...',100,-1)}}
                         </p>
                     </div>
                 </div>
