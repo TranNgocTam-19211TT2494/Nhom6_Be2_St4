@@ -1,0 +1,130 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\ProductComment;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class ProductCommentController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+
+        $comment = ProductComment::orderBy('id', 'DESC')->with('product')->paginate(10);
+        return view('backend.comment.productComment')->with('comments', $comment);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'comment' => 'string|required|max:50',
+        ]);
+        $user_id = null;
+        if (Auth::check()) {
+            $user_id = Auth::user()->id;
+        }
+        $data = $request->all();
+        $data['user_id'] = $user_id;
+        $data['product_id'] = $request->product_id;
+        $status = ProductComment::create($data);
+        if ($status) {
+            request()->session()->flash('success', 'Comment successfully added');
+        } else {
+            request()->session()->flash('error', 'Error occurred while adding comment');
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $comment = ProductComment::findOrFail($id);
+        echo $comment;
+        echo $request->reply;
+
+        $data['replied_comment'] = $request->reply;
+
+
+        $status = $comment->fill($data)->save();
+        if ($status) {
+            request()->session()->flash('success', 'Comment successfully updated');
+        } else {
+            request()->session()->flash('error', 'Error occurred while updating comment');
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+        $comment = ProductComment::findOrFail($id);
+        if ($comment) {
+            $status = $comment->delete();
+            if ($status) {
+                request()->session()->flash('success', 'Comment Successfully deleted');
+            } else {
+                request()->session()->flash('error', 'Comment can not deleted');
+            }
+            return redirect()->back();
+        } else {
+            request()->session()->flash('error', 'Comment not found');
+            return redirect()->back();
+        }
+    }
+}

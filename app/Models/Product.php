@@ -34,4 +34,7 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductReview', 'product_id', 'id')->with('user_info')->where('status', 'active')->orderBy('id', 'DESC');
     }
+    public function comment(){
+        return $this->hasMany(ProductComment::class,'product_id','id');
+    }
 }

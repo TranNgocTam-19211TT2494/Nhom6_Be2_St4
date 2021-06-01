@@ -75,6 +75,10 @@ Route::post('/profile/{id}', 'UserController@profileUpdate')->name('admin.profil
 
 // Backend (ADMIN) section start
 Route::group(['prefix' => '/admin', 'middleware' => ['auth']], function () {
+    // Notification
+    Route::get('/notification/{id}', 'NotificationController@show')->name('admin.notification');
+    Route::get('/notifications', 'NotificationController@index')->name('all.notification');
+    Route::delete('/notification/{id}', 'NotificationController@delete')->name('notification.delete');
     //Category
     Route::resource('category', 'CategoryController')->middleware('checkRole:admin,mod');
     //Product
@@ -96,7 +100,7 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth']], function () {
     //Admin
     Route::get('/', 'AdminController@index')->name('admin');
     //Order
-Route::resource('order', 'OrderController')->middleware('checkLogin');
+    Route::resource('order', 'OrderController')->middleware('checkLogin');
     //Post Caterogy :
     Route::resource('blogcategory', 'PostCategoryController')->middleware('checkRole:admin,mod,writer');
     // //admin profile
@@ -106,6 +110,8 @@ Route::resource('order', 'OrderController')->middleware('checkLogin');
     // Settings
     Route::get('setting', 'AdminController@settings')->name('setting')->middleware('checkRole:admin');
     Route::post('setting/update', 'AdminController@settingsUpdate')->name('setting.update');
+    //comment product
+    Route::resource('productComment', 'ProductCommentController')->middleware('checkRole:admin,mod');
 });
 // End backend section
 
@@ -142,7 +148,6 @@ Route::post('sort', 'PageController@sortByPrice')->name('sort.price');
 Route::get('product', 'PageController@shop')->name('product.all');
 Route::get('products', 'PageController@shop');
 //  -- End Lọc giá và sắp xếp -- 
+
 //Page Rate
 Route::post('rate', 'ProductReviewController@store')->name('rate.add')->middleware('checkLogin');
-
-Route::get('test','ProductController@AutoDiscount');

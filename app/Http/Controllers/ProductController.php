@@ -187,4 +187,23 @@ class ProductController extends Controller
             }
         }
     }
+    //Phương thức tự ẩn sản phẩm khi hết hạn
+    //Phương thức tự động giảm giá sản phẩm khi hạn sử dụng còn ít
+    public static function AutoInactive()
+    {
+        $products = Product::get();
+        $dtNow = Carbon::now('Asia/Ho_Chi_Minh');
+        foreach ($products as $product) {
+            $ngayNhap = new DateTime(($product->created_at)->format("Y-m-d"));
+            $now = new DateTime($dtNow->format("Y-m-d"));
+            $interval = new DateInterval('P' . $product->expiry . 'D');
+            $handung = $ngayNhap->add($interval);
+            //$ex2=$dtNow->format("Y-m-d");
+            $expired = $handung->diff($now);
+            if ($expired->d == 0) {
+                $product['status'] = 'inactive';
+                $product->save();
+            }
+        }
+    }
 }

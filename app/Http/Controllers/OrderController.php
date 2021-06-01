@@ -9,6 +9,10 @@ use App\Models\Cart;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade as PDF;
+use App\Notifications\StatusNotification;
+use Illuminate\Support\Facades\Notification;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -69,7 +73,7 @@ class OrderController extends Controller
         $order_data['quantity'] = $request->quantity;
         $order_data['coupon'] = $request->coupon;
         $order_data['total_amount'] = $request->total;
-        $order_data['address']=$request->address;
+        $order_data['address'] = $request->address;
 
         // return $order_data['total_amount'];
         $order_data['status'] = "new";
@@ -97,6 +101,14 @@ class OrderController extends Controller
         request()->session()->flash('success', 'Your product successfully placed in order');
         //gui mail
         Mail::to($request->email)->send(new OrderDetail($order->id));
+        Mail::to(User::where('role', 'admin')->first())->send(new OrderDetail($order->id));
+        $details = [
+            'title' => 'New order created',
+            'actionURL' => route('order.show', $order->id),
+            'fas' => 'fa-file-alt'
+        ];
+        $users = User::where('role', 'admin')->first();
+        Notification::send($users, new StatusNotification($details));
         return redirect()->route('index');
     }
 
@@ -161,12 +173,13 @@ class OrderController extends Controller
         }
     }
     // PDF generate
-    public function pdfGenerate($id){
-        $order=Order::getAllOrder($id);
+    public function pdfGenerate($id)
+    {
+        $order = Order::getAllOrder($id);
         // return $order;
-        $file_name=$order->order_number.'-'.$order->first_name.'.pdf';
+        $file_name = $order->order_number . '-' . $order->first_name . '.pdf';
         // return $file_name;
-        $pdf=PDF::loadview('backend.order.pdf',compact('order'));
+        $pdf = PDF::loadview('backend.order.pdf', compact('order'));
         return $pdf->download($file_name);
     }
 }

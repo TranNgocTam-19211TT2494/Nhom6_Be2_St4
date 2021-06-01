@@ -6,12 +6,16 @@
 <section class="breadcrumb-section set-bg" data-setbg="{{asset('/img/breadcrumb.jpg')}}">
     <div class="container">
         <div class="row">
+            @php
+            $countComment=DB::table('product_comments')->where('product_id',$products->id)->count();
+            @endphp
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
                     <h2>{{$products->title}}</h2>
                     <div class="breadcrumb__option">
                         <a href="{{asset('/')}}">Home</a>
                         <a href="{{route('product.detail',$products->slug)}}">{{$products->title}}</a>
+                        <a href="#">{{$countComment}} comments</a>
                         <span>{{$products->cat_info['title']}}</span>
                     </div>
                 </div>
@@ -76,12 +80,24 @@
                             @php
                             $rate=DB::table('product_reviews')->where('product_id',$products->id)->count();
                             @endphp
-                            <span>({{$rate}}) reviews</span>
+                            <span class="color-count">{{$rate}} đánh giá | {{$countComment}} bình luận</span>
                             <!-- Kết thúc đánh giá của dùng -->
 
                     </div>
-                    <div class="product__details__price">{{number_format($products->price)}} VNĐ</div>
-                    <p>{!!$products->description!!}</p>
+                    @php
+                    $price=0;
+                    if($products->discount >0 )
+                    {
+                    $sale = round((100 - $products->discount)/100,1);
+                    $price=round(($products->price * $sale));
+                    }
+                    else
+                    {
+                    $price=$products->price;
+                    }
+                    @endphp
+                    <div class="product__details__price">{{number_format($price)}} VNĐ</div>
+                    <p>{!!$products->summary!!}</p>
                     <!-- Add cart -->
                     <form action="{{route('cart.add',$products->slug)}}" method="get">
                         @csrf
@@ -94,7 +110,6 @@
                         </div>
 
                         <button type="submit" class="primary-btn" style="border: none;">ADD TO CARD</button>
-
                     </form>
                     <!-- <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a> -->
 
@@ -124,7 +139,7 @@
                             <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab" aria-selected="true">Description</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab" aria-selected="false">Information</a>
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab" aria-selected="false">Comment</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab" aria-selected="false">Reviews<span>({{$rate}})</span></a>
@@ -134,15 +149,134 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__tab__desc">
-                                <h6>Products Summary</h6>
-                                <p>{!!$products->summary!!}</p>
+                                <h6>Products Description</h6>
+                                <p>{!!$products->description!!}</p>
 
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="product__details__tab__desc">
-                                <h6>Products Description</h6>
-                                <p>{!!$products->description!!}</p>
+                                <h6>Products Comment</h6>
+                                <!-- Bình luận về sản phẩm -->
+                                <div class="product__details__tab__desc">
+                                    @if(Auth::check())
+                                    <h6>Câu hỏi về sản phẩm này ({{$countComment}})</h6>
+                                    <!-- comment như cái quần què -->
+                                    {{--comment như vầy nè--}}
+                                    <form action="{{route('productComment.store')}}" method="post">
+                                        @csrf
+                                        <div class="frames">
+                                            <fieldset>
+                                                <div class="row">
+                                                    <div class="col-lg-12 col-12">
+                                                        <div class="form-group">
+                                                            <input type="text" style="display: none;" name="product_id" value="{{$products->id}}" id="">
+                                                            <textarea class="form-control" id="message" placeholder="Viết câu hỏi của bạn ở đây" name="comment" required="" rows="5" maxlength="300"></textarea>
+                                                        </div>
+                                                        <div class="panel">
+                                                            <span>
+                                                                "Câu hỏi của bạn không nên bao gồm thông tin cá nhân,
+                                                                như là: email, số điện thoại"
+                                                            </span>
+
+                                                            <!-- kiểm tra đăng nhập thành công mới cho commet -->
+                                                            <button type="submit" class="btn btn-primary btncss">Submit</button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </form>
+                                    @else
+                                    <h6>
+                                        <span><a href="{{route('user.login')}}">Đăng nhập</a></span>
+                                        hoặc
+                                        <span><a href="{{route('user.register')}}"> Đăng kí</a></span>
+                                        để đặt câu hỏi cho nhà bán hàng ngay và câu trả lời sẽ được hiển thị tại đây.
+                                    </h6>
+                                    @endif
+                                    <div class="pt-20">
+                                        @if(isset($productComment))
+                                        @foreach($productComment as $item)
+                                        @if($item->product_id == $products->id)
+                                        <!-- COMMENT 1 - START -->
+                                        <div class="media">
+                                            @php
+                                            $name=DB::table('users')->select('name')->where('id',$item->user_id)->get();
+                                            @endphp
+                                            @php
+                                            $email=DB::table('users')->select('photo')->where('id',$item->user_id)->get();
+                                            @endphp
+                                            @if(isset($email) && isset($name))
+                                            @foreach($email as $data)
+                                            <a class="pull-left" href="#"><img class="media-object" src="{{ $data->photo }}" style="height: 50px; width: 50px; border-radius: 50%;" alt=""></a>
+                                            @endforeach
+                                            <div class="media-body">
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <h4 class="media-heading">@foreach($name as
+                                                            $data){{ $data->name}}
+                                                            @endforeach
+                                                            <!-- Xóa comment -->
+                                                            @if(isset(Auth::user()->role))
+                                                            @if(Auth::user()->role === "admin" || Auth::user()->id ===
+                                                            $item->user_id || Auth::user()->role === "writter")
+                                                            <form method="POST" action="{{route('productComment.remove',$item->id)}}">
+                                                                @csrf
+                                                                <!-- @method('delete') -->
+                                                                <button class="btn btn-danger btn-sm dltBtn" data-id={{$item->id}} style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-trash-alt"></i></button>
+                                                            </form>
+                                                            @endif
+                                                            @endif
+                                                        </h4>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <p class="comment">{!!$item->comment!!}</p>
+                                                        <span style="font-weight: bold;">Reply by admin :
+                                                        </span><span>{{$item->replied_comment}}</span>
+                                                        <p class="reply"></p>
+                                                        <ul class="list-unstyled list-inline media-detail pull-left">
+                                                            <li style="padding-bottom: 15px;"><i class="fa fa-calendar"></i>{{$item->created_at->format('d/m/Y')}}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endif
+                                        </div>
+                                        @if(Auth::check())
+                                        <!-- cập nhập comment reply -->
+                                        @if(Auth::user()->role === "admin" || Auth::user()->role === "writter")
+                                        <form action="{{route('productComment.update',$item->id)}}" method="post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <div class="form-group">
+                                                <div class="row">
+
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                                        <input id="inputTitle" type="text" name="reply" placeholder="Reply Comment" value="{{old('title')}}" class="form-control">
+                                                    </div>
+
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                                        <button type="submit" class="btn btn-success replycss">Reply</button>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                        @endif
+                                        <!-- COMMENT 1 - END -->
+                                        @endif
+                                        @endif
+                                        @endforeach
+                                        @endif
+
+                                    </div>
+                                </div>
+
+                                <!-- Kêt thuất form bình luận -->
                             </div>
                         </div>
                         <!-- Xử lý thông kê đánh giá -->
@@ -197,7 +331,7 @@
 
                                                             </span>
                                                             <div class="bgb">
-                                                                <div class="bgb-in" style="width: {{$itemAge}}%"></div>
+                                                                <div class="bgb-in" style="width: <?= $itemAge ?>%"></div>
                                                             </div>
                                                             <span class="c" data-buy="{{$itemAge}}"><strong>{{$arrayRating['total']}}</strong>
                                                                 đánh giá ({{$itemAge}}%) </span>
@@ -217,8 +351,6 @@
 
                                     </div>
                                 </div>
-
-
                                 <!-- End Rating reviews -->
                                 <!-- Review -->
                                 <div class="product__details__tab__desc">
@@ -228,6 +360,7 @@
                                         {{ session('status') }}
                                     </div>
                                     @endif
+
                                     <form class="form" method="post" action="{{route('rate.add')}}">
                                         @csrf
                                         <!-- {{ csrf_field() }} -->
@@ -281,7 +414,7 @@
 
 
                                                     <!-- Rating view -->
-                                                    <span class="list_text_rating">Tốt</span>
+                                                    <span class="list_text_rating">...</span>
                                                 </div>
 
                                             </div>
@@ -296,6 +429,7 @@
 
                                             </div>
                                             @php
+
                                             $icheck = false;
 
                                             $carts = DB::table('carts')->join('orders', 'orders.id',
@@ -336,7 +470,7 @@
                                         </div>
                                     </form>
 
-                                    <!-- Comment list -->
+                                    <!-- Show Review list -->
 
                                     @foreach($product_reviews as $review)
                                     @if($review->product_id == $products->id)
@@ -347,8 +481,13 @@
 
                                                 <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
                                                     <div class="g-mb-15">
-                                                        <h5 class="h5 g-color-gray-dark-v1 mb-0">
-                                                            {{$review->user_info['name']}}
+                                                        <h5 class="g-color-gray-dark-v1 mb-0">
+                                                            Bởi : {{$review->user_info['name']}}
+                                                            <span class="date">{{$review->created_at->format('d/m/Y')}}</span>
+                                                            <span>
+                                                                <img class="veryImage" width="15" height="16" src="//laz-img-cdn.alicdn.com/tfs/TB1bOqBeb_I8KJjy1XaXXbsxpXa-30-32.png" alt="no">
+                                                                <span class="verify">chứng nhận đã mua hàng</span>
+                                                            </span>
                                                         </h5>
 
                                                         <span class="g-color-gray-dark-v4 g-font-size-12">
@@ -397,13 +536,17 @@
                                         </div>
 
                                     </div>
-                                    <!-- End Comment List -->
+                                    <!-- End Review List -->
+
                                     @endif
                                     @endforeach
-
-
+                                    <div class="page">
+                                        {{$product_reviews->links()}}
+                                    </div>
                                 </div>
                                 <!-- End Review -->
+
+
                             </div>
                     </div>
                 </div>
@@ -490,8 +633,6 @@
                 }
             });
             $(".list_text_rating").text('').text(listRatingStart[number]);
-
-
         });
     });
 </script>
@@ -499,6 +640,58 @@
 
 @push('styles')
 <style>
+    /* comment */
+    .page {
+        margin-top: 10px;
+        float: right;
+    }
+
+    .color-count {
+        color: black;
+        font-size: unset;
+        margin-left: 10px;
+    }
+
+    .g-color-gray-dark-v1 .veryImage {
+        margin-left: 8px;
+        margin-right: 3px;
+    }
+
+    .g-color-gray-dark-v1 .verify {
+        color: #4caf50;
+    }
+
+    .g-color-gray-dark-v1 .date {
+        float: right;
+    }
+
+    .media-heading form {
+        position: relative;
+        left: 90%;
+        bottom: 10px;
+    }
+
+    .pt-20 {
+        padding-top: 20px;
+    }
+
+    .panel span {
+        margin-right: 42%;
+        font-weight: 500;
+    }
+
+    .img-responsive {
+        width: 50px;
+    }
+
+    .frames {
+        padding: 10px;
+        border: 1px solid #9e9e9e;
+        border-radius: 3px;
+        box-shadow: 0 2px 0 0 #f1f1f1;
+        text-align: right;
+    }
+
     /* Bảng thông kê đánh giá */
     .list_text_rating {
         display: inline-block;
@@ -618,7 +811,7 @@
         color: #FFC107 !important;
     }
 
-    .comment img {
+    .comment .d-flex {
         height: 60px;
         width: 60px;
         margin-right: 20px;

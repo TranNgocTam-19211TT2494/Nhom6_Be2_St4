@@ -50,9 +50,10 @@
                                     </h5>
                                     <div class="product__item__price">
                                         @php
-                                        $after_discount=($product->price-($product->price*($product->discount/100)));
+                                        $sale = round((100 - $product->discount)/100,1);
+                                        $after_discount=round(($product->price * $sale));
                                         @endphp
-                                        {{number_format($product->price)}}đ<span>{{number_format($after_discount)}}đ</span>
+                                        {{number_format($after_discount)}}đ<span>{{number_format($product->price)}}đ</span>
                                     </div>
                                 </div>
                             </div>
@@ -66,19 +67,24 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-5">
                         <div class="filter__sort">
-                            <span>Sort By</span>
-
-                            <select name="SortbyList" id="SortbyList">
-                                <option value="0" data-anh=".all">
-                                    Default
-                                </option>
-                                <option value="1" data-anh=".hot">
-                                    Hot
-                                </option>
-                                <option value="2" data-anh=".new">
-                                    New
-                                </option>
-                            </select>
+                            <form>
+                                <span>Sort By</span>
+                                @csrf
+                                <select name="sort" id="sort">
+                                    <option value="{{Request::url()}}?sort_by=all" selected>
+                                        Default
+                                    </option>
+                                    <option value="{{Request::url()}}?sort_by=all" data-anh=".all">
+                                        All
+                                    </option>
+                                    <option value="{{Request::url()}}?sort_by=hot" data-anh=".hot">
+                                        Hot
+                                    </option>
+                                    <option value="{{Request::url()}}?sort_by=new" data-anh=".new">
+                                        New
+                                    </option>
+                                </select>
+                            </form>
 
                         </div>
                     </div>
@@ -105,13 +111,9 @@
             <!-- Bỏ thêm class content vào row -->
             <div class="row" id="updateDiv">
 
-                @foreach($products as $product)
+                @foreach($array as $product)
                 @php $photo = explode(',',$product->photo); @endphp
-                <div class="col-lg-4 col-md-6 col-sm-6 contentisotope <?php if ($product->condition == 'hot') {
-                                                                            echo " hot";
-                                                                        } else {
-                                                                            echo " new";
-                                                                        } ?>">
+                <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="product__item">
                         <div class="product__item__pic set-bg" data-setbg="{{$photo[0]}}">
                             <ul class="product__item__pic__hover">
@@ -153,40 +155,24 @@
 <!-- Product Section End -->
 @endsection
 @push('scripts')
-<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+<!-- <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script> -->
 <!-- or -->
-<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+<!-- <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script> -->
 <!-- Isotope -->
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 <script>
-    $(function() {
-        // $('.row').isotope({
-        //     itemSelector: '.contentisotope',
-        // });
-        //ẩn div không select được đi:
-        $('.nice-select').hide();
-        //Xóa style:display:none; trong select;
-        $('#SortbyList').removeAttr('style');
-        //code cho nut
-        $('#SortbyList').change(function() {
-            var danhmuc = $('option:selected').attr('data-anh');
-            if (danhmuc == '.all') {
-                $('#updateDiv').isotope({
-                    filter: '*'
+    $('.nice-select').remove();
+    $('#sort').removeAttr('style');
 
-                });
-            } else {
-                $('#updateDiv').isotope({
-                    filter: danhmuc
-
-                });
-                $('.filter__found').remove();
+    $(document).ready(function() {
+        $('#sort').on('change', function() {
+            var url = $(this).val();
+            if (url) {
+                window.location = url;
             }
             return false;
-
-        });
-
-    });
+        })
+    })
 </script>
 @endpush
 @push('styles')

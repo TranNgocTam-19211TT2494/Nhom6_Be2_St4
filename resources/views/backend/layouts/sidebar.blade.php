@@ -97,7 +97,13 @@
       <i class="fas fa-comments"></i>
       <span>Reviews</span></a>
   </li>
-
+<!-- Product Comments -->
+<li class="nav-item">
+    <a class="nav-link" href="{{route('productComment.index')}}">
+      <i class="fas fa-comments fa-chart-area"></i>
+      <span>Comments</span>
+    </a>
+  </li>
 
   <!-- Divider -->
   <hr class="sidebar-divider">

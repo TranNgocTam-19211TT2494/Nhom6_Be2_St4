@@ -19,7 +19,10 @@ use App\Models\Wishlist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\PostComment;
+use App\Models\ProductComment;
 use App\Models\Contact;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\StatusNotification;
 
 
 class PageController extends Controller
@@ -28,6 +31,7 @@ class PageController extends Controller
     public function index()
     {
         ProductController::AutoDiscount();
+        ProductController::AutoInactive();
         $posts = Post::orderBy('id', 'DESC')->get()->take(3);
         $latestProducts = Product::where('condition', 'new')->orderBy('id', 'DESC')->get()->take(6);
         $hotProducts = Product::where('condition', 'hot')->orderBy('id', 'DESC')->get()->take(6);
@@ -97,6 +101,13 @@ class PageController extends Controller
             $userActivation = new UserActivation;
             $activation = new ActivationService($userActivation);
             $activation->sendActivationMail($check);
+            $details = [
+                'title' => 'New user registed',
+                'actionURL' => route('user.index'),
+                'fas' => 'fa-file-alt'
+            ];
+            $users = User::where('role', 'admin')->first();
+            Notification::send($users, new StatusNotification($details));
             return redirect()->route('index');
         } else {
             request()->session()->flash('error', 'Please try again!');
@@ -188,15 +199,15 @@ class PageController extends Controller
         return view('page.product-list', ['products' => $products, 'categories' => $categories]);
     }
     //Chi tiết sản phẩm
-    //Chi tiết sản phẩm
     public static function getProductBySlug($slug)
     {
 
         $products = Product::with('cat_info')->where('slug', $slug)->first();
         //Review : 
         $product_reviews = ProductReview::getAllReview();
+        $productComment = ProductComment::getAllComments();
         $categories = Category::all();
-        return view('page.product-detail', ['products' => $products, 'product_reviews' => $product_reviews, 'categories' => $categories]);
+        return view('page.product-detail', ['products' => $products, 'product_reviews' => $product_reviews, 'categories' => $categories,'productComment' => $productComment]);
     }
     //Trang user profile
     public function adminProfile()
@@ -292,9 +303,9 @@ class PageController extends Controller
         return redirect()->route('index');
     }
     //Sort data by price
+
     public function shop(Request $request)
     {
-
         if ($request->ajax() && isset($request->start) && isset($request->end)) {
 
             $start = $request->start;
@@ -304,7 +315,7 @@ class PageController extends Controller
                 ->where('price', '>=', $start)
                 ->where('price', '<=', $end)
                 ->orderby('price', 'ASC')
-                ->paginate(9);
+                ->paginate(6);
             $categories = Category::all();
             // dd($products);
 
@@ -312,10 +323,23 @@ class PageController extends Controller
             return view('page.product', compact('products', 'categories'));
         } else {
             $categories = Category::all();
-            $products = DB::table('products')->paginate(9);
-
+            $products = Product::orderBy('id', 'DESC')->paginate(6);
+            $sort_by = "";
+            $array = null;
+            if (isset($_GET['sort_by'])) {
+                $sort_by = $_GET['sort_by'];
+                if ($sort_by == 'all') {
+                    $array =  Product::orderBy('id', 'DESC')->paginate(6);
+                } else if ($sort_by == 'hot') {
+                    $array = Product::where('condition', 'hot')->paginate(6)->appends(request()->query());
+                } else if ($sort_by == 'new') {
+                    $array = Product::where('condition', 'new')->paginate(6)->appends(request()->query());
+                }
+            } else {
+                $array =  Product::orderBy('id', 'DESC')->paginate(6);
+            }
             response()->json(['success' => $products]);
-            return view('page.product-list', compact('products', 'categories'));
+            return view('page.product-list', ['products' => $products, 'categories' => $categories, 'array' => $array]);
         }
     }
 }
