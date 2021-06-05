@@ -185,6 +185,13 @@
       <span>Users</span></a>
   </li>
 
+  <!-- Contacts -->
+  <li class="nav-item">
+    <a class="nav-link" href="{{route('contacts.index')}}">
+    <i class="far fa-address-book"></i>
+      <span>Contacts</span></a>
+  </li>
+
 <!-- Settings -->
   <li class="nav-item">
     <a class="nav-link" href="{{route('setting')}}">

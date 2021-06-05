@@ -22,7 +22,7 @@
               <th>Name</th>
               <th>Email</th>
               <th>Quantity</th>
-              <th>Charge</th>
+              <th>Shipping fee</th>
               <th>Total Amount</th>
               <th>Status</th>
               <th>Action</th>
@@ -50,8 +50,8 @@
                     <td>{{$order->first_name}} {{$order->last_name}}</td>
                     <td>{{$order->email}}</td>
                     <td>{{$order->quantity}}</td>
-                    <td>123</td>
-                    <td>${{number_format($order->total_amount)}}</td>
+                    <td>{{number_format($order->shipping)}} vnd</td>
+                    <td>{{number_format($order->total_amount)}} vnd</td>
                     <td>
                         @if($order->status=='new')
                           <span class="badge badge-primary">{{$order->status}}</span>

@@ -59,6 +59,7 @@ class CartController extends Controller
         request()->session()->flash('success', 'Product successfully added to cart');
         return back();
     }
+    //Xóa sản phẩm khỏi giỏ hàng
     public function cartDelete(Request $request)
     {
         $cart = Cart::find($request->id);

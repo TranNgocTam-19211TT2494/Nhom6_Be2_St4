@@ -5,10 +5,10 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>Contact Us</h2>
+                    <h2>Register</h2>
                     <div class="breadcrumb__option">
                         <a href="{{url('/')}}">Home</a>
-                        <span>User login</span>
+                        <span>User register</span>
                     </div>
                 </div>
             </div>

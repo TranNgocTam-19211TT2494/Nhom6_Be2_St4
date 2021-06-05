@@ -19,7 +19,6 @@ class CreateCartsTable extends Migration
             $table->unsignedBigInteger('order_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('price');
-            $table->enum('status',['new','progress','delivered','cancel'])->default('new');
             $table->integer('quantity');
             $table->integer('amount');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('CASCADE');

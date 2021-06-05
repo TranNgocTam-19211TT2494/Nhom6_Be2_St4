@@ -103,7 +103,7 @@ class PageController extends Controller
             $activation->sendActivationMail($check);
             $details = [
                 'title' => 'New user registed',
-                'actionURL' => route('user.index'),
+                'actionURL' => route('users.index'),
                 'fas' => 'fa-file-alt'
             ];
             $users = User::where('role', 'admin')->first();

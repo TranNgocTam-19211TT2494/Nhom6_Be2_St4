@@ -1,5 +1,5 @@
 @extends('backend.layouts.master')
-@section('title','OGANI SHOP || Comment Page')
+
 @section('main-content')
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -9,67 +9,43 @@
     </div>
   </div>
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary float-left">Comment Lists</h6>
+    <h6 class="m-0 font-weight-bold text-primary float-left">Contacts Lists</h6>
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      @if(count($comments)>0)
+      @if(count($contacts)>0)
       <table class="table table-bordered" id="order-dataTable" width="100%" cellspacing="0">
         <thead>
           <tr>
             <th>S.N.</th>
-            <th>Author</th>
-            <th>Post Title</th>
+            <th>Name</th>
+            <th>Email</th>
             <th>Message</th>
-            <th>Date</th>
-            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tfoot>
           <tr>
             <th>S.N.</th>
-            <th>Author</th>
-            <th>Post Title</th>
+            <th>Name</th>
+            <th>Email</th>
             <th>Message</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Action</th>
           </tr>
         </tfoot>
         <tbody>
-          @foreach($comments as $comment)
-          {{-- {{$comment}} --}}
-          @php
-          $title=DB::table('posts')->select('title')->where('id',$comment->post_id)->get();
-          @endphp
+          @foreach($contacts as $contact)
           <tr>
-            <td>{{$comment->id}}</td>
-            <td>{{$comment->user_info['name']}}</td>
-            <td>{{$comment->product['title']}}</td>
-            <td>{{$comment->comment}}</td>
-            <td>{{$comment->created_at->format('M d D, Y g: i a')}}</td>
-            <td>
-              @if($comment->status=='active')
-              <span class="badge badge-success">{{$comment->status}}</span>
-              @else
-              <span class="badge badge-warning">{{$comment->status}}</span>
-              @endif
-            </td>
-            <td>
-              <form method="POST" action="{{route('productComment.destroy',[$comment->id])}}">
-                @csrf
-                @method('delete')
-                <button class="btn btn-danger btn-sm dltBtn" data-id={{$comment->id}} style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fas fa-trash-alt"></i></button>
-              </form>
-            </td>
+            <td>{{$contact->id}}</td>
+            <td>{{$contact->name}}</td>
+            <td>{{$contact->email}}</td>
+            <td>{{$contact->message}}</td>
           </tr>
           @endforeach
         </tbody>
       </table>
-      <span style="float:right">{{$comments->links()}}</span>
+      <span style="float:right">{{$contact->links()}}</span>
       @else
-      <h6 class="text-center">No product comments found!!!</h6>
+      <h6 class="text-center">No contacts found!!!</h6>
       @endif
     </div>
   </div>

@@ -31,7 +31,6 @@ class OrderDetail extends Mailable
     public function build()
     {
         $order=Order::getAllOrder($this->orderId);
-        return $this->from('hovietlong234@gmail.com')
-                ->view('page.pdf',compact('order',$order));
+        return $this->view('page.pdf',compact('order',$order));
     }
 }

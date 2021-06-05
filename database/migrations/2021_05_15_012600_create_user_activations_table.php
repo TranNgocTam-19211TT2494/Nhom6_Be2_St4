@@ -14,6 +14,7 @@ class CreateUserActivationsTable extends Migration
     public function up()
     {
         Schema::create('user_activations', function (Blueprint $table) {
+            $table->id();
             $table->integer('user_id')->unsigned();
             $table->string('activation_code')->index();
             $table->timestamps();

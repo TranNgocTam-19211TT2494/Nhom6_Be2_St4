@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Support\Facades\Hash;
 use App\Rules\MatchOldPassword;
 use App\Models\Setting;
+use App\Models\Contact;
 
 class AdminController extends Controller
 {
@@ -85,5 +86,10 @@ class AdminController extends Controller
             request()->session()->flash('error', 'Please try again');
         }
         return redirect()->route('setting');
+    }
+    //Show all contacts
+    public function showAllContact(){
+        $contacts = Contact::all();
+        return view('backend.contact.index')->with('contacts', $contacts);
     }
 }

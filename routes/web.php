@@ -70,11 +70,12 @@ Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], funct
 //comment
 Route::resource('comment', 'PostCommentController');
 
-//Update profile
-Route::post('/profile/{id}', 'UserController@profileUpdate')->name('admin.profile.update');
-
 // Backend (ADMIN) section start
 Route::group(['prefix' => '/admin', 'middleware' => ['auth']], function () {
+    //Contacts
+    Route::get('contacts', 'AdminController@showAllContact')->name('contacts.index')->middleware('checkRole:admin,mod');
+    //Update profile
+    Route::post('/profile/{id}', 'UserController@profileUpdate')->name('admin.profile.update');
     // Notification
     Route::get('/notification/{id}', 'NotificationController@show')->name('admin.notification');
     Route::get('/notifications', 'NotificationController@index')->name('all.notification');
@@ -145,8 +146,7 @@ Route::group(['prefix' => '/user'], function () {
 
 Route::post('sort', 'PageController@sortByPrice')->name('sort.price');
 //  -- Lọc giá và sắp xếp danh sách sản phẩm-- 
-Route::get('product', 'PageController@shop')->name('product.all');
-Route::get('products', 'PageController@shop');
+Route::get('products', 'PageController@shop')->name('product.all');
 //  -- End Lọc giá và sắp xếp -- 
 
 //Page Rate
