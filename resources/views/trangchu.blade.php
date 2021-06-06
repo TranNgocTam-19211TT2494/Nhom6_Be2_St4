@@ -266,7 +266,7 @@
                 <div class="latest-product__text">
                     <h4>Latest Products</h4>
                     <div class="latest-product__slider owl-carousel">
-                        @if ($latest && count($latest) == 6)
+                        @if ($latest && count($latest) >= 4)
 
                         @for ($i=0; $i < 2 ; $i++) @php $j=3; $k=0; @endphp <div class="latest-prdouct__slider__item">
                             @for ($k;$k<$j;$k++) <a href="{{route('product.detail',$latest[$k]->slug)}}" class="latest-product__item">
@@ -278,7 +278,7 @@
                                 </div>
                                 <div class="latest-product__item__text">
                                     <h6>{{$latest[$k]->title}}</h6>
-                                    <span>{{$latest[$k]->price}}</span>
+                                    <span>{{number_format($latest[$k]->price)}}</span>
                                 </div>
                                 </a>
                                 @endfor
@@ -300,19 +300,19 @@
             <div class="latest-product__text">
                 <h4>Top Hot Products</h4>
                 <div class="latest-product__slider owl-carousel">
-                    @if ($hot && count($hot) == 6)
+                    @if ($hot && count($hot) >= 4)
 
                     @for ($i=0; $i < 2 ; $i++) @php $j=3; $k=0; @endphp <div class="latest-prdouct__slider__item">
                         @for ($k;$k<$j;$k++) <a href="{{route('product.detail',$latest[$k]->slug)}}" class="latest-product__item">
                             <div class="latest-product__item__pic">
                                 <img src="@php
-                $image=explode(',',$latest[$k]->photo);
+                $image=explode(',',$hot[$k]->photo);
                 echo $image[0];
-                @endphp" alt="{{$latest[$k]->title}}">
+                @endphp" alt="{{$hot[$k]->title}}">
                             </div>
                             <div class="latest-product__item__text">
                                 <h6>{{$hot[$k]->title}}</h6>
-                                <span>{{$hot[$k]->price}}</span>
+                                <span>{{number_format($hot[$k]->price)}}</span>
                             </div>
                             </a>
                             @endfor
@@ -377,7 +377,7 @@
                     <div class="blog__item__text">
                         <h5><a href="{{route('blog.detail',$post->slug)}}">{{$post->title}}</a></h5>
                         <p>
-                            {{substr_replace($post->description,'...',100,-1)}}
+                            {{$post->summary}}
                         </p>
                     </div>
                 </div>
@@ -418,6 +418,12 @@
     .owl-carousel .owl-item img {
         display: block;
         width: 110px;
+    }
+
+    .blog__item__pic img {
+        width: 370px;
+        height: 266px;
+        min-width: 100%;
     }
 </style>
 @endpush

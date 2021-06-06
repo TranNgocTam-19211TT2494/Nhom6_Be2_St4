@@ -27,19 +27,18 @@ use App\Notifications\StatusNotification;
 
 class PageController extends Controller
 {
-    //
     public function index()
     {
         ProductController::AutoDiscount();
         ProductController::AutoInactive();
         $posts = Post::orderBy('id', 'DESC')->get()->take(3);
-        $latestProducts = Product::where('condition', 'new')->orderBy('id', 'DESC')->get()->take(6);
-        $hotProducts = Product::where('condition', 'hot')->orderBy('id', 'DESC')->get()->take(6);
-        $reviewProducts = Product::with('review')->get()->take(6);
-        $cate1 = Category::with('products')->where('id', 1)->first();
-        $cate2 = Category::with('products')->where('id', 2)->first();
-        $cate3 = Category::with('products')->where('id', 3)->first();
-        $cate4 = Category::with('products')->where('id', 4)->first();
+        $latestProducts = Product::where('condition', 'new')->where('status','active')->orderBy('id', 'DESC')->get()->take(6);
+        $hotProducts = Product::where('condition', 'hot')->where('status','active')->orderBy('id', 'DESC')->get()->take(6);
+        $reviewProducts = Product::with('review')->where('status','active')->get()->take(6);
+        $cate1 = Category::with('products')->where('status','active')->where('id', 1)->first();
+        $cate2 = Category::with('products')->where('status','active')->where('id', 2)->first();
+        $cate3 = Category::with('products')->where('status','active')->where('id', 3)->first();
+        $cate4 = Category::with('products')->where('status','active')->where('id', 4)->first();
         $categories = Category::all();
         //banner
         $banner = Banner::where('status', 'active')->first();
@@ -159,7 +158,7 @@ class PageController extends Controller
     {
         $feature = Post::where('id', 1)->take(3)->get();
         $post_categories = PostCategory::all();
-        $posts = Post::orderBy('id', 'DESC')->paginate(6);
+        $posts = Post::orderBy('id', 'DESC')->where('post_cat_id',$id)->paginate(6);
         return view('page.blog_category', ['posts' => $posts, 'post_categories' => $post_categories, 'post_cat_id' => $feature]);
     }
     //Blog hiển thị chi tiết
@@ -195,8 +194,8 @@ class PageController extends Controller
     public function ShowProduct()
     {
         $categories = Category::all();
-        $products = Product::orderBy('id', 'DESC')->paginate(6);
-        return view('page.product-list', ['products' => $products, 'categories' => $categories]);
+        $sale = Product::orderBy('id', 'DESC')->paginate(6);
+        return view('page.product-list', ['sale' => $sale, 'categories' => $categories]);
     }
     //Chi tiết sản phẩm
     public static function getProductBySlug($slug)
@@ -207,7 +206,7 @@ class PageController extends Controller
         $product_reviews = ProductReview::getAllReview();
         $productComment = ProductComment::getAllComments();
         $categories = Category::all();
-        return view('page.product-detail', ['products' => $products, 'product_reviews' => $product_reviews, 'categories' => $categories,'productComment' => $productComment]);
+        return view('page.product-detail', ['products' => $products, 'product_reviews' => $product_reviews, 'categories' => $categories, 'productComment' => $productComment]);
     }
     //Trang user profile
     public function adminProfile()
@@ -306,6 +305,7 @@ class PageController extends Controller
 
     public function shop(Request $request)
     {
+        $sale = Product::orderBy('id', 'DESC')->where('status','active')->where('discount','>', 0)->paginate(6);
         if ($request->ajax() && isset($request->start) && isset($request->end)) {
 
             $start = $request->start;
@@ -314,6 +314,7 @@ class PageController extends Controller
             $products = DB::table('products')
                 ->where('price', '>=', $start)
                 ->where('price', '<=', $end)
+                ->where('status','active')
                 ->orderby('price', 'ASC')
                 ->paginate(6);
             $categories = Category::all();
@@ -339,7 +340,7 @@ class PageController extends Controller
                 $array =  Product::orderBy('id', 'DESC')->paginate(6);
             }
             response()->json(['success' => $products]);
-            return view('page.product-list', ['products' => $products, 'categories' => $categories, 'array' => $array]);
+            return view('page.product-list', ['products' => $products, 'categories' => $categories, 'array' => $array, 'sale' => $sale]);
         }
     }
 }

@@ -62,10 +62,10 @@
                             <div class="blog__item__text">
                                 <ul>
                                     <li><i class="fa fa-calendar-o"></i>{{$item->created_at->format('d-m-Y')}}</li>
-                                    <li><i class="fa fa-comment-o"></i> 5</li>
+                                    <li><i class="fa fa-comment-o"></i> 0</li>
                                 </ul>
                                 <h5><a href="{{route('blog.detail',$item->slug)}}">{{$item->title}}</a></h5>
-                                <p>{!!substr_replace($item->description,'...',100,-1)!!}</p>
+                                <p>{{$item->summary}}</p>
                                 <a href="{{route('blog.detail',$item->slug)}}" class="blog__btn">READ MORE&rarr; </a>
                             </div>
                         </div>

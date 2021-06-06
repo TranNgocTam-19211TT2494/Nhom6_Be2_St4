@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\PostCategory;
 use App\Models\PostTag;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -33,8 +34,8 @@ class PostController extends Controller
     {
         $categories = PostCategory::get();
         $tags = PostTag::get();
-        $users = User::get();
-        return view('backend.post.create')->with('users', $users)->with('categories', $categories)->with('tags', $tags);
+        $user = Auth::user();
+        return view('backend.post.create')->with('user', $user)->with('categories', $categories)->with('tags', $tags);
     }
 
     /**
@@ -45,12 +46,13 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
+        //var_dump($request->all());
         $this->validate($request, [
 
             'title' => 'string|required',
-            'description' => 'string|nullable',
-            'photo' => 'string|nullable',
+            'summary' => 'string|required',
+            'description' => 'string|required',
+            'photo' => 'string|required',
             'tags' => 'nullable',
             'added_by' => 'nullable',
             'post_cat_id' => 'required',
@@ -58,7 +60,7 @@ class PostController extends Controller
         ]);
 
         $data = $request->all();
-
+        $summary = substr($data['summary'], 0, 120);
         $slug = Str::slug($request->title);
         $count = Post::where('slug', $slug)->count();
         if ($count > 0) {
@@ -72,6 +74,7 @@ class PostController extends Controller
         } else {
             $data['tags'] = '';
         }
+        $data['summary'] = $summary;
         // return $data;
 
         $status = Post::create($data);
@@ -122,7 +125,6 @@ class PostController extends Controller
         // return $request->all();
         $this->validate($request, [
             'title' => 'string|required',
-            'quote' => 'string|nullable',
             'summary' => 'string|nullable',
             'description' => 'string|nullable',
             'photo' => 'string|nullable',

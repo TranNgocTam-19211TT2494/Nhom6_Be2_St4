@@ -42,7 +42,7 @@
                                     <li><i class="fa fa-comment-o"></i> 5</li>
                                 </ul>
                                 <h5><a href="{{route('blog.detail',$item->slug)}}">{{$item->title}}</a></h5>
-                                <p>{!!substr_replace($item->description,'...',100,-1)!!}</p>
+                                <p>{{$item->summary}}</p>
                                 <a href="{{route('blog.detail',$item->slug)}}" class="blog__btn">READ MORE&rarr; </a>
                             </div>
                         </div>

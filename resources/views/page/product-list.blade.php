@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('content')
-
+{{--dd($sale)--}}
 <!-- Product Section Begin -->
 <section class="product spad">
     <div class="container">
@@ -18,8 +18,7 @@
                 </div>
                 <div class="row">
                     <div class="product__discount__slider owl-carousel">
-                        @foreach($products as $product)
-                        @if ($product->discount > 0)
+                        @foreach($sale as $product)
                         @php $photo = explode(',',$product->photo); @endphp
                         <div class="col-lg-4">
                             <div class="product__discount__item">
@@ -58,7 +57,6 @@
                                 </div>
                             </div>
                         </div>
-                        @endif
                         @endforeach
                     </div>
                 </div>

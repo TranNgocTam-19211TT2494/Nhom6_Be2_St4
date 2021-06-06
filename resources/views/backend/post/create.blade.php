@@ -15,13 +15,13 @@
         @enderror
       </div>
 
-      <!-- <div class="form-group">
-          <label for="quote" class="col-form-label">Quote</label>
-          <textarea class="form-control" id="quote" name="quote">{{old('quote')}}</textarea>
-          @error('quote')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
-        </div> -->
+      <div class="form-group">
+        <label for="summary" class="col-form-label">Summary</label>
+        <textarea class="form-control" id="summary" name="summary">{{old('summary')}}</textarea>
+        @error('summary')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+      </div>
 
       <div class="form-group">
         <label for="description" class="col-form-label">Description</label>
@@ -53,10 +53,7 @@
       <div class="form-group">
         <label for="added_by">Author</label>
         <select name="added_by" class="form-control">
-
-          @foreach($users as $key=>$data)
-          <option value='{{$data->id}}'>{{$data->name}}</option>
-          @endforeach
+          <option value='{{$user->id}}'>{{$user->name}}</option>
         </select>
       </div>
       <div class="form-group">
