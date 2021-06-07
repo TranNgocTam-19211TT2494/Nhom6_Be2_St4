@@ -222,9 +222,9 @@
                                                             @if(isset(Auth::user()->role))
                                                             @if(Auth::user()->role === "admin" || Auth::user()->id ===
                                                             $item->user_id || Auth::user()->role === "writter")
-                                                            <form method="POST" action="{{route('productComment.remove',$item->id)}}">
+                                                            <form method="post" action="{{route('productComment.destroy',$item->id)}}">
                                                                 @csrf
-                                                                <!-- @method('delete') -->
+                                                                @method('delete')
                                                                 <button class="btn btn-danger btn-sm dltBtn" data-id={{$item->id}} style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-trash-alt"></i></button>
                                                             </form>
                                                             @endif

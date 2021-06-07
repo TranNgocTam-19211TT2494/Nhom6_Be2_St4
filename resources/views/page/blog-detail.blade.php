@@ -168,7 +168,7 @@
                             <div class="blog__details__widget">
                                 <ul>
                                     <li><span>Categories: {{$post->cat_info['title']}}</span> </li>
-                                    <li><span>Tags:
+                                    <li><span>Tags: {{$post->tags}}
 
                                         </span></li>
                                 </ul>
@@ -212,7 +212,7 @@
                             <li><i class="fa fa-comment-o"></i> 5</li>
                         </ul>
                         <h5><a href="{{route('blog.detail',$item->slug)}}">{{$item->title}}</a></h5>
-                        <p>{!!substr_replace($item->description,'...',100,-1)!!}</p>
+                        <p>{{$item->summary}}</p>
                         <a href="{{route('blog.detail',$item->slug)}}" class="blog__btn">READ MORE&rarr; </a>
                     </div>
                 </div>
