@@ -22,4 +22,8 @@ class ProductReview extends Model
     {
         return ProductReview::where('user_id', auth()->user()->id)->with('user_info')->paginate(10);
     }
+    public function product_review()
+    {
+        return $this->hasOne('App\Models\Product', 'id', 'product_id');
+    }
 }

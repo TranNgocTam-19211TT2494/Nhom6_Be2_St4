@@ -331,24 +331,29 @@
             <h4>Review Products</h4>
             @isset($reviewProducts)
             <div class="latest-product__slider owl-carousel">
-                <div class="latest-prdouct__slider__item">
-                    @foreach ($reviewProducts as $product)
-                    @if (count($product->review)>0)
-                    <a href="{{route('product.detail',$product->slug)}}" class="latest-product__item">
-                        <div class="latest-product__item__pic">
-                            <img src="@php
-                $image=explode(',',$product->photo);
-                echo $image[0];
-                @endphp" alt="{{$product->title}}">
-                        </div>
-                        <div class="latest-product__item__text">
-                            <h6>{{$product->title}}</h6>
-                            <span>{{number_format($product->title)}}</span>
-                        </div>
-                    </a>
-                    @endif
-                    @endforeach
-                </div>
+            @if ($reviewProducts && count($reviewProducts) >= 4)
+
+@for ($i=0; $i < 2 ; $i++) @php $j=3; $k=0; @endphp <div class="latest-prdouct__slider__item">
+    @for ($k;$k<$j;$k++) <a href="{{route('product.detail',$reviewProducts[$k]->product_review->slug)}}" class="latest-product__item">
+        <div class="latest-product__item__pic">
+            <img src="@php
+$image=explode(',',$reviewProducts[$k]->product_review->photo);
+echo $image[0];
+@endphp" alt="{{$reviewProducts[$k]->product_review->title}}">
+        </div>
+        <div class="latest-product__item__text">
+            <h6>{{$reviewProducts[$k]->product_review->title}}</h6>
+            <span>{{number_format($reviewProducts[$k]->product_review->price)}}</span>
+        </div>
+        </a>
+        @endfor
+        @php
+        $j=6;
+        $k=3;
+        @endphp
+</div>
+@endfor
+@endif
             </div>
             @endisset
         </div>

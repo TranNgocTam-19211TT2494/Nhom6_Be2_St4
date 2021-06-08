@@ -431,6 +431,9 @@
                                             @php
 
                                             $icheck = false;
+                                            $reviewCheck = DB::table('product_reviews')->where('user_id',Auth::user()->id)
+                                            ->where('product_id',$products->id)->count();
+
 
                                             $carts = DB::table('carts')->join('orders', 'orders.id',
                                             '=', 'carts.order_id')->get();
@@ -439,34 +442,38 @@
                                             $icheck = true;
                                             }
                                             }
-                                            @endphp
-                                            @if($icheck == true)
-                                            @if(Auth::check())
-                                            @if(Auth::user()->id == $item->user_id && $icheck == true)
-                                            <div class="col-lg-12 col-12">
-                                                <div class="form-group button5">
-                                                    <button type="submit" class="site-btn">Submit</button>
+                                            if($reviewCheck <= 1) 
+                                            { $icheck=true; }
+                                            else
+                                            {
+                                                $icheck=false;
+                                            } 
+                                            @endphp 
+                                            @if($icheck==true) @if(Auth::check()) @if(Auth::user()->id == $item->user_id && $icheck == true)
+                                                <div class="col-lg-12 col-12">
+                                                    <div class="form-group button5">
+                                                        <button type="submit" class="site-btn">Submit</button>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            @else
-                                            <div class="col-lg-12 col-12">
-                                                <div class="form-group button5">
-                                                    <button type="submit" disabled class="site-btn" style="opacity: .5;">Submit</button>
+                                                @else
+                                                <div class="col-lg-12 col-12">
+                                                    <div class="form-group button5">
+                                                        <button type="submit" disabled class="site-btn" style="opacity: .5;">Submit</button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            @endif
-                                            @else
-                                            <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;margin-left: 20px;">
-                                                Mời quý khách đăng nhập tài khoản trước ạ!!</h6>
-                                            @endif
-                                            @else
-                                            <div class="col-lg-12 col-12">
-                                                <div class="form-group button5">
-                                                    <button type="submit" disabled class="site-btn" style="opacity: .5;">Submit</button>
+                                                @endif
+                                                @else
+                                                <h6 style="margin-top: 20px;font-weight: bold;margin-bottom: 20px;margin-left: 20px;">
+                                                    Mời quý khách đăng nhập tài khoản trước ạ!!</h6>
+                                                @endif
+                                                @else
+                                                <div class="col-lg-12 col-12">
+                                                    <div class="form-group button5">
+                                                        <button type="submit" disabled class="site-btn" style="opacity: .5;">Submit</button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            @endif
+                                                @endif
                                         </div>
                                     </form>
 

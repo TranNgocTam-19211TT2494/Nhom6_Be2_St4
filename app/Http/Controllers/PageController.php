@@ -34,7 +34,7 @@ class PageController extends Controller
         $posts = Post::orderBy('id', 'DESC')->get()->take(3);
         $latestProducts = Product::where('condition', 'new')->where('status','active')->orderBy('id', 'DESC')->get()->take(6);
         $hotProducts = Product::where('condition', 'hot')->where('status','active')->orderBy('id', 'DESC')->get()->take(6);
-        $reviewProducts = Product::with('review')->where('status','active')->get()->take(6);
+        $reviewProducts = ProductReview::with('product_review')->where('status','active')->get()->take(6);
         $cate1 = Category::with('products')->where('status','active')->where('id', 1)->first();
         $cate2 = Category::with('products')->where('status','active')->where('id', 2)->first();
         $cate3 = Category::with('products')->where('status','active')->where('id', 3)->first();

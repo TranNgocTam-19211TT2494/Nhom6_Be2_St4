@@ -67,10 +67,10 @@ Route::get('order/pdf/{id}', 'OrderController@pdfGenerate')->name('order.pdf')->
 Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], function () {
     Lfm::routes();
 });
-//comment
+//comment post
 Route::resource('comment', 'PostCommentController');
 
-// Backend (ADMIN) section start
+//-----------------Backend (ADMIN) route group start-------------------
 Route::group(['prefix' => '/admin', 'middleware' => ['auth']], function () {
     //Contacts
     Route::get('contacts', 'AdminController@showAllContact')->name('contacts.index')->middleware('checkRole:admin,mod');
@@ -97,9 +97,9 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth']], function () {
     //Users
     Route::resource('users', 'UserController')->middleware('checkRole:admin');
     //User profile
-    Route::get('profile', 'AdminController@profile')->name('admin.profile');
+    Route::get('profile', 'AdminController@profile')->name('admin.profile')->middleware('checkRole:admin,mod,writter');
     //Admin
-    Route::get('/', 'AdminController@index')->name('admin');
+    Route::get('/', 'AdminController@index')->name('admin')->middleware('checkRole:admin,mod,writter');
     //Order
     Route::resource('order', 'OrderController')->middleware('checkLogin');
     //Post Caterogy :
@@ -111,12 +111,10 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth']], function () {
     // Settings
     Route::get('setting', 'AdminController@settings')->name('setting')->middleware('checkRole:admin');
     Route::post('setting/update', 'AdminController@settingsUpdate')->name('setting.update');
-    //comment product
-    Route::resource('productComment', 'ProductCommentController')->middleware('checkRole:admin,mod');
 });
-// End backend section
+//--------------------End backend route group---------------------
 
-//User section start
+//---------------------User route group start---------------------
 Route::group(['prefix' => '/user'], function () {
     Route::get('/profile', 'UserController@userProfile')->name('user.profile')->middleware('checkLogin');
     Route::get('/changepassword', 'PageController@changeUserPassword')->name('user.change.password');
@@ -141,13 +139,12 @@ Route::group(['prefix' => '/user'], function () {
     //wishlist
     Route::resource('wishlist', 'WishlistController')->middleware('checkLogin');
 });
-
-// End user secsion
-
-Route::post('sort', 'PageController@sortByPrice')->name('sort.price');
+//---------------------End user route group-----------------------
+//comment product
+Route::resource('productComment', 'ProductCommentController')->middleware('checkLogin');
 //  -- Lọc giá và sắp xếp danh sách sản phẩm-- 
 Route::get('products', 'PageController@shop')->name('product.all');
 //  -- End Lọc giá và sắp xếp -- 
 
-//Page Rate
+//Product Rate
 Route::post('rate', 'ProductReviewController@store')->name('rate.add')->middleware('checkLogin');
