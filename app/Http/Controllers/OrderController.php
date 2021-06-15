@@ -147,6 +147,18 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request, [
+            'status' => 'required|in:new,process,delivered,cancel'
+        ]);
+        $order = Order::findOrFail($id);
+        $order['status'] = $request->status;
+        $status = $order->save();
+        if ($status) {
+            request()->session()->flash('success', 'Order Successfully updated');
+        } else {
+            request()->session()->flash('error', 'Order can not updated');
+        }
+        return redirect()->route('order.index');
     }
 
     /**

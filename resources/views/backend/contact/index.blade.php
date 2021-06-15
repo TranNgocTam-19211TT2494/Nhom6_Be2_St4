@@ -30,6 +30,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Message</th>
+            <th>Action</th>
           </tr>
         </tfoot>
         <tbody>
@@ -39,11 +40,12 @@
             <td>{{$contact->name}}</td>
             <td>{{$contact->email}}</td>
             <td>{{$contact->message}}</td>
+            <td>N/A</td>
           </tr>
           @endforeach
         </tbody>
       </table>
-      <span style="float:right">{{$contact->links()}}</span>
+      <span style="float:right">{{$contact->links}}</span>
       @else
       <h6 class="text-center">No contacts found!!!</h6>
       @endif

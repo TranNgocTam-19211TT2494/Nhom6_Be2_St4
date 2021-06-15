@@ -151,7 +151,8 @@ class PageController extends Controller
         $feature = Post::where('id', 1)->take(3)->get();
         $post_categories = PostCategory::all();
         $post = Post::orderBy('created_at', 'DESC')->paginate(6);
-        return view('page.blog', ['posts' => $post, 'post_categories' => $post_categories, 'added_by' => $feature, 'random_post' => $random_post]);
+        return view('page.blog', ['posts' => $post, 'post_categories' => $post_categories, 
+        'added_by' => $feature, 'random_post' => $random_post]);
     }
     //Blog category
     public function getBlogCategoryByID($id)
@@ -169,7 +170,8 @@ class PageController extends Controller
         $comment = PostComment::orderBy('created_at', 'DESC')->get();
         $post = Post::with('cat_info')->with('author_info')->with('tag_info')->where('slug', $slug)->first();
         $post_categories = PostCategory::all();
-        return view('page.blog-detail', ['post' => $post, 'post_categories' => $post_categories, 'random_post' => $random_post, 'post_interest' => $post_interest, 'comment' => $comment]);
+        return view('page.blog-detail', ['post' => $post, 'post_categories' => $post_categories, 
+        'random_post' => $random_post, 'post_interest' => $post_interest, 'comment' => $comment]);
     }
     //Blog tìm kiếm
     public function blogSearch(Request $request)
@@ -206,7 +208,10 @@ class PageController extends Controller
         $product_reviews = ProductReview::getAllReview();
         $productComment = ProductComment::getAllComments();
         $categories = Category::all();
-        return view('page.product-detail', ['products' => $products, 'product_reviews' => $product_reviews, 'categories' => $categories, 'productComment' => $productComment]);
+        return view('page.product-detail', ['products' => $products, 
+        'product_reviews' => $product_reviews, 
+        'categories' => $categories, 
+        'productComment' => $productComment]);
     }
     //Trang user profile
     public function adminProfile()

@@ -42,9 +42,6 @@ class ProductReviewController extends Controller
         $this->validate($request, [
             'rate' => 'required|numeric|min:1'
         ]);
-        //$product_info = Product::getProductBySlug($request->slug);
-        //  return $product_info;
-        // return $request->all();
         $data = $request->all();
         $data['product_id'] = $request->product_id;
         $data['user_id'] = $request->user()->id;

@@ -217,25 +217,6 @@
 <!-- Featured Section End -->
 
 <!-- Banner Begin -->
-<!-- Banner Begin -->
-@if(isset($subBanner))
-<div class="banner">
-    <div class="container">
-        <div class="row">
-            @foreach($subBanner as $item)
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="banner__pic">
-                    <a href="{{route('product.all')}}"><img src="{{$item->photo}}" alt="" data-setbg="{{$item->photo}}"></a>
-
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</div>
-@else
-<!-- Banner End -->
-
 <div class="banner">
     <div class="container">
         <div class="row">
@@ -254,7 +235,6 @@
     </div>
 </div>
 <!-- Banner End -->
-@endif
 
 
 

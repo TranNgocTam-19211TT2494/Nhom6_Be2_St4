@@ -36,10 +36,13 @@
                                 <img src="{{$item->photo}}" alt="{{$item->title}}">
                             </div>
                             <div class="blog__item__text">
+                                @php
+                                $countCommentByPosts=DB::table('post_comments')->where('post_id',$item->id)->get();
+                                @endphp
                                 <ul>
                                     <li><i class="fa fa-calendar-o"></i> {{$item->created_at->format('d-m-Y')}}
                                     </li>
-                                    <li><i class="fa fa-comment-o"></i> 5</li>
+                                    <li><i class="fa fa-comment-o"></i>&ensp;{{count($countCommentByPosts)}}</li>
                                 </ul>
                                 <h5><a href="{{route('blog.detail',$item->slug)}}">{{$item->title}}</a></h5>
                                 <p>{{$item->summary}}</p>

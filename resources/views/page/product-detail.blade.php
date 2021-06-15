@@ -428,15 +428,18 @@
                                                 </div>
 
                                             </div>
+                                            @isset(Auth::user()->id)
+                                                
+                                            
                                             @php
-
                                             $icheck = false;
                                             $reviewCheck = DB::table('product_reviews')->where('user_id',Auth::user()->id)
                                             ->where('product_id',$products->id)->count();
 
-
+                                                       
                                             $carts = DB::table('carts')->join('orders', 'orders.id',
                                             '=', 'carts.order_id')->get();
+                                            
                                             foreach($carts as $item) {
                                             if( $item->product_id == $products->id) {
                                             $icheck = true;
@@ -449,7 +452,9 @@
                                                 $icheck=false;
                                             } 
                                             @endphp 
-                                            @if($icheck==true) @if(Auth::check()) @if(Auth::user()->id == $item->user_id && $icheck == true)
+                                            @if($icheck==true) 
+                                            @if(Auth::check()) 
+                                            @if(Auth::user()->id == $item->user_id && $icheck == true)
                                                 <div class="col-lg-12 col-12">
                                                     <div class="form-group button5">
                                                         <button type="submit" class="site-btn">Submit</button>
@@ -474,6 +479,7 @@
                                                     </div>
                                                 </div>
                                                 @endif
+                                                @endisset
                                         </div>
                                     </form>
 

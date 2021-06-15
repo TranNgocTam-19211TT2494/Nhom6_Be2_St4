@@ -2,7 +2,10 @@
 @section('content')
 <!-- Blog Details Hero Begin -->
 <section class="blog-details-hero set-bg" data-setbg="{{asset('/img/blog/details/details-hero.jpg')}}" id="hero">
-    @php $countPost=DB::table('post_comments')->where('post_id',$post->id)->get(); @endphp
+
+    @php
+    $countPost=DB::table('post_comments')->where('post_id',$post->id)->get();
+    @endphp
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -200,6 +203,7 @@
             </div>
         </div>
         <div class="row">
+
             @foreach($post_interest as $item)
             <div class="col-lg-4 col-md-4 col-sm-6">
                 <div class="blog__item">
@@ -207,9 +211,13 @@
                         <img src="{{$item->photo}}" alt="{{$item->title}}" height="350px" width="500px">
                     </div>
                     <div class="blog__item__text">
+                        @php
+                        $countCommentByPosts=DB::table('post_comments')->where('post_id',$item->id)->get();
+                        @endphp
                         <ul>
                             <li><i class="fa fa-calendar-o"></i>{{$item->created_at->format('d-m-Y')}}</li>
-                            <li><i class="fa fa-comment-o"></i> 5</li>
+                            <li><i class="fa fa-comment-o"></i>&ensp;@php echo count($countCommentByPosts)@endphp</li>
+
                         </ul>
                         <h5><a href="{{route('blog.detail',$item->slug)}}">{{$item->title}}</a></h5>
                         <p>{{$item->summary}}</p>
