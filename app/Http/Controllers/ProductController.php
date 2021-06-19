@@ -172,7 +172,7 @@ class ProductController extends Controller
     //Phương thức tự động giảm giá sản phẩm khi hạn sử dụng còn ít
     public static function AutoDiscount()
     {
-        $products = Product::get();
+        $products = Product::all();
         $dtNow = Carbon::now('Asia/Ho_Chi_Minh');
         foreach ($products as $product) {
             $ngayNhap = new DateTime(($product->created_at)->format("Y-m-d"));

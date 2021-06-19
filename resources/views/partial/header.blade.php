@@ -9,7 +9,7 @@
         <ul>
             @isset(Auth::user()->id)
             @php
-            $countWishlist = App\Models\wishlist::where('user_id',Auth::user()->id)->count();
+            $countWishlist = App\Models\Wishlist::where('user_id',Auth::user()->id)->count();
             @endphp
             <li><a href="{{route('wishlist')}}"><i class="fa fa-heart"></i> <span>{{$countWishlist}}</span></a></li>
             @else

@@ -29,6 +29,7 @@ return array(
     'App\\Http\\Controllers\\PostCommentController' => $baseDir . '/app/Http/Controllers/PostCommentController.php',
     'App\\Http\\Controllers\\PostController' => $baseDir . '/app/Http/Controllers/PostController.php',
     'App\\Http\\Controllers\\PostTagController' => $baseDir . '/app/Http/Controllers/PostTagController.php',
+    'App\\Http\\Controllers\\ProductCommentController' => $baseDir . '/app/Http/Controllers/ProductCommentController.php',
     'App\\Http\\Controllers\\ProductController' => $baseDir . '/app/Http/Controllers/ProductController.php',
     'App\\Http\\Controllers\\ProductReviewController' => $baseDir . '/app/Http/Controllers/ProductReviewController.php',
     'App\\Http\\Controllers\\UserController' => $baseDir . '/app/Http/Controllers/UserController.php',

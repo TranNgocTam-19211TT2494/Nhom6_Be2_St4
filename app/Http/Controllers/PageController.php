@@ -264,7 +264,7 @@ class PageController extends Controller
             ->where('user_id', Auth::user()->id)
             //   ->orderBy('id','DESC')->paginate(6)
             ->get();
-        return view('page.Wishlist', compact('products'));
+        return view('page.wishlist', compact('products'));
     }
     public function removeWishList($productId)
     {
